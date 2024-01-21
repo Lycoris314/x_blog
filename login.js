@@ -13,7 +13,7 @@ $(()=>{
         }).done((data)=>{
             console.log(data);
             if(data=="success"){
-                location="./main.html"
+                location="main.php";
             }else{
                 $("p").text("ユーザ名またはパスワードが間違っています。");
             }
