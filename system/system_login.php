@@ -23,12 +23,6 @@ try {
 
     $stmt->execute();
     if($row = $stmt->fetch()){
-        
-        //$sql2="select free_name, profile from user where user_no={$row[0]}";
-        //$row2 = $pdo->query($sql2)->fetch();
-
-        //$sql3="select profile from user where user_no={$row[0]}";
-        //$row3 = $pdo->query($sql3)->fetch();
 
         session_start();
         session_regenerate_id(true);

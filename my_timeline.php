@@ -1,4 +1,12 @@
 <?php
+
+$page = 1;
+if (isset($_GET["page"]) && is_numeric($_GET["page"])) {
+    $page = (int) $_GET["page"];
+}
+$from = ($page - 1) * 10;
+
+
 $free_name_get = "";
 $id_name_get = "";
 $profile_get = "";
@@ -26,6 +34,7 @@ if (isset($_GET["id_name"]) && $_GET["id_name"] != "") {
 
 $id_name = "";
 session_start();
+session_regenerate_id(true);
 if (
     isset($_SESSION["id_name"]) && $_SESSION["id_name"] != "" &&
     isset($_SESSION["free_name"]) && $_SESSION["free_name"] != "" &&
@@ -63,7 +72,16 @@ try {
     $pdo = new PDO(DBInfo::DNS, DBInfo::USER, DBInfo::PASSWORD);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    $sql = "select * from tweet  where id_name=? order by date desc, time desc  limit 10";
+    $sql = "select count(tweet_no) from tweet where id_name=?";
+    $stmt = $pdo->prepare($sql);
+    $stmt->bindValue(1, $id_name_use);
+    $stmt->execute();
+    $row = $stmt->fetch();
+
+    $totalpage = ceil((int) $row[0] / 10);
+
+
+    $sql = "select * from tweet  where id_name=? order by date desc, time desc  limit {$from},10";
     $stmt = $pdo->prepare($sql);
     $stmt->bindValue(1, $id_name_use);
     $stmt->execute();
@@ -129,8 +147,8 @@ $pdo = null;
                 <?php
                 if ($id_name == $id_name_use) {
                     print "
-                <a href=''>アカウント編集</a>
-                <a href=''>プロフィール編集</a>
+                <a href='account_edit.php'>アカウント編集</a>
+                <a href='profile_edit.php'>プロフィール編集</a>
                 ";
                 }
                 ?>
@@ -149,6 +167,18 @@ $pdo = null;
                 }
                 ?>
             </ul>
+        </section>
+        <section>
+            <?php
+            for ($i = 1; $i <= $totalpage; $i++) {
+                if ($page == $i) {
+                    print "<a>";
+                }else{
+                    print "<a href='?page={$i}&id_name={$id_name_use}'>";
+                }
+                print "{$i} </a> &emsp;";
+            }
+            ?>
         </section>
     </main>
 </body>

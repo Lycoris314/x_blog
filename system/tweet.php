@@ -33,8 +33,8 @@ try {
     print "success"; 
 
 } catch (PDOException $e) {
-    if (isset($pdo) == true && $pdo->inTransaction() == true) {
+    if (isset($pdo) && $pdo->inTransaction() ) {
         $pdo->rollBack();
-    }
-    $pdo = null;
+    }    
 }
+$pdo = null;
