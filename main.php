@@ -1,35 +1,35 @@
 <?php
-function h($str){
-    return htmlspecialchars($str,null,"UTF-8");
-}
 
 session_start();
 session_regenerate_id(true);
-if (isset($_SESSION["id_name"]) && $_SESSION["id_name"] != "") {
-    $id_name = $_SESSION["id_name"];
-
-    try {
-        require_once("./system/DBInfo.php");
-        $pdo = new PDO(DBInfo::DNS, DBInfo::USER, DBInfo::PASSWORD);
-        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-        $sql = "select free_name, user_no from user where id_name=?";
-        $stmt = $pdo->prepare($sql);
-        $stmt->bindValue(1, $id_name);
-        $stmt->execute();
-
-        $row = $stmt->fetch();
-        $free_name = h($row[0]);
-        $user_no =$row[1];
-
-    } catch (PDOException $e) {
-        $pdo = null;
-        print $e->getMessage();
-    }
-
+if (isset($_SESSION["user_no"]) && $_SESSION["user_no"] != "") {
+    $user_no = $_SESSION["user_no"];
 } else {
-    header("location:login.html");
+    header("location:error.html");
+    exit();
 }
+
+try {
+    require_once("./system/DBInfo.php");
+    $pdo = new PDO(DBInfo::DNS, DBInfo::USER, DBInfo::PASSWORD);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+    $sql = "select free_name from user where user_no=?";
+    $stmt = $pdo->prepare($sql);
+    $stmt->bindValue(1, $user_no);
+    $stmt->execute();
+
+    $row = $stmt->fetch();
+    $free_name = $row[0];
+
+    $pdo = null;
+
+} catch (PDOException $e) {
+    $pdo = null;
+    header("location:error.html");
+    exit();
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -45,9 +45,11 @@ if (isset($_SESSION["id_name"]) && $_SESSION["id_name"] != "") {
 
 <body>
     <header>
-        <p>X blog</p>
+        <h1>X blog</h1>
         <p>ようこそ、
-            <a href="my_timeline.php"><?= $free_name ?></a>さん
+            <a href="my_timeline.php?user_no=<?=$user_no?>">
+                <?= $free_name ?>
+            </a>さん
         </p>
         <a href="timeline.php">タイムライン</a>
         <a href="notice.php">通知</a>
@@ -55,11 +57,9 @@ if (isset($_SESSION["id_name"]) && $_SESSION["id_name"] != "") {
         <a href="system/system_logout.php">ログアウト</a>
     </header>
     <main>
+        <h2>発言する</h2>
         <form id=tweet action="system/tweet.php" method="post">
             <textarea name="content" cols="30" rows="10" required></textarea>
-            <input type="hidden" name="id_name" value=<?=$id_name ?> >
-            <input type="hidden" name="free_name" value=<?=$free_name ?> >
-            <input type="hidden" name="user_no" value=<?=$user_no ?> >
 
             <button>送信</button>
         </form>

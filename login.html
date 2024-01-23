@@ -11,19 +11,23 @@
 </head>
 
 <body>
+    <header>
+        <h1>X blog</h1>
+        <a href="timeline_no_login.php">ログインせずに見る</a>
+    </header>
     <div class="container">
-        <h1>ログイン</h1>
-        <form action="system.php" method="get">
+        <h2>ログイン</h2>
+        <form action="">
             <table>
                 <tbody>
                     <tr>
                         <td>ユーザ名</td>
-                        <td><input type="text" name="id_name"  required></td>
+                        <td><input type="text" name="id_name" maxlength="16" required></td>
                     </tr>
                     <tr>
                         <td>パスワード</td>
                         <!--あとでtypeをpasswordに変える-->
-                        <td><input type="text" name="password" required></td>
+                        <td><input type="text" name="password" maxlength="20" required></td>
                     </tr>
                 </tbody>
 

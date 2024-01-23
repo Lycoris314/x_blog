@@ -1,15 +1,11 @@
 <?php
-function h($str){
-    return htmlspecialchars($str,null,"UTF-8");
-}
-
 session_start();
 session_regenerate_id(true);
-if (isset($_SESSION["free_name"]) && $_SESSION["free_name"] != "") {
+if (isset($_SESSION["user_no"]) && $_SESSION["user_no"] != "") {
     $user_no = $_SESSION["user_no"];
-    $free_name = $_SESSION["free_name"];
-    
 } else {
+    header("location:error.html");
+    exit();
 }
 
 try {
@@ -17,16 +13,25 @@ try {
     $pdo = new PDO(DBInfo::DNS, DBInfo::USER, DBInfo::PASSWORD);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    //$sql = "select followed from follow where following=?";
-    $sql = "select id_name,free_name,profile from follow inner join user on followed=user_no where following=?";
-
+    $sql = "select free_name from user where user_no=?";
     $stmt = $pdo->prepare($sql);
     $stmt->bindValue(1, $user_no);
     $stmt->execute();
+    $row = $stmt->fetch();
+    $free_name=$row[0];
+    $row="";
+
+    //$sql = "select followed from follow where following=?";
+    $sql = "select id_name,free_name,profile, user_no from follow inner join user on followed=user_no where following=?";
+    $stmt = $pdo->prepare($sql);
+    $stmt->bindValue(1, $user_no);
+    $stmt->execute();
+    $pdo =null; //もしかしたらこのタイミングではダメかも
 
 } catch (PDOException $e) {
     $pdo = null;
-    print $e->getMessage();
+    header("location:error.html");
+    exit();    
 }
 
 
@@ -45,7 +50,7 @@ try {
     <header>
         <p>X blog</p>
         <p>ようこそ、
-            <a href="my_timeline.php">
+            <a href="my_timeline.php?user_no=<?=$user_no?>">
                 <?= $free_name ?>
             </a>さん
         </p>
@@ -62,9 +67,9 @@ try {
             <?php
             
             while ($row = $stmt->fetch()) {
-                $row[1]=h($row[1]);
+                //$row[1]=h($row[1]);
                 print("<li>");
-                print("<a href='my_timeline.php?id_name={$row[0]}'>{$row[0]}</a>");
+                print("<a href='my_timeline.php?user_no={$row[3]}'>{$row[0]}</a>");
                 print("{$row[1]}");
                 print("{$row[2]}");
                 print("</li>");

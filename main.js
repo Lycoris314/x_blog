@@ -1,5 +1,6 @@
 $(()=>{
     $("#tweet").on("submit",(e)=>{
+        
         e.preventDefault();
         const parameter = $("form").serialize();
         $.ajax({
@@ -12,7 +13,8 @@ $(()=>{
                 $("textarea").val("");
                 $("#tweeted").text("送信されました");
             }else{
-                $("#tweeted").text("エラーが発生しました");
+                console.log(data);
+                $("#tweeted").text(data);
             }
         })
     })

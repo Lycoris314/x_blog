@@ -1,9 +1,32 @@
 <?php
-    session_start();
-    session_regenerate_id(true);
-    if(true){
-        $id_name=$_SESSION["id_name"];
-    }
+session_start();
+session_regenerate_id(true);
+if (isset($_SESSION["user_no"]) && $_SESSION["user_no"] != "") {
+    $user_no = $_SESSION["user_no"];
+} else {
+    header("location:error.html");
+    exit();
+}
+
+try {
+    require_once("./system/DBInfo.php");
+    $pdo = new PDO(DBInfo::DNS, DBInfo::USER, DBInfo::PASSWORD);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+    $sql = "select id_name, free_name from user where user_no=?";
+    $stmt = $pdo->prepare($sql);
+    $stmt->bindValue(1, $user_no);
+    $stmt->execute();
+    $row = $stmt->fetch();
+    $id_name = $row[0];
+    $free_name = $row[1];
+
+} catch (PDOException $e) {
+    $pdo = null;
+    header("location:error.html");
+    exit();
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -32,7 +55,7 @@
                     </tr>
                     <tr>
                         <td>新しいユーザ名</td>
-                        <td><input id="new_id_name" type="text" name="new_id_name" required></td>
+                        <td><input id="new_id_name" type="text" name="new_id_name" value="<?= $id_name ?>" required></td>
                     </tr>
                     <tr>
                         <td>現在のパスワード</td>

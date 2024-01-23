@@ -1,10 +1,13 @@
 <?php
 session_start();
 session_regenerate_id();
-
-if(true){
-    $new_id_name=$_SESSION["new_id_name"];
+if (isset($_SESSION["user_no"]) && $_SESSION["user_no"] != "") {
+    $user_no = $_SESSION["user_no"];
+} else {
+    header("location:error.html");
+    exit();
 }
+
 ?>
 
 <!DOCTYPE html>

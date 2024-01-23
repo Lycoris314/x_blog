@@ -1,4 +1,7 @@
 <?php
+/*function h($str){
+    return htmlspecialchars($str,null,"UTF-8");
+}*/
 
 $page = 1;
 if (isset($_GET["page"]) && is_numeric($_GET["page"])) {
@@ -7,44 +10,87 @@ if (isset($_GET["page"]) && is_numeric($_GET["page"])) {
 $from = ($page - 1) * 10;
 
 
-$free_name_get = "";
-$id_name_get = "";
-$profile_get = "";
-if (isset($_GET["id_name"]) && $_GET["id_name"] != "") {
-    $id_name_get = $_GET["id_name"];
-
-    try {
-        require_once("./system/DBInfo.php");
-        $pdo = new PDO(DBInfo::DNS, DBInfo::USER, DBInfo::PASSWORD);
-        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-        $sql = "select free_name, profile from user where id_name=?";
-        $stmt = $pdo->prepare($sql);
-        $stmt->bindValue(1, $id_name_get);
-        $stmt->execute();
-        $row = $stmt->fetch();
-        $free_name_get = $row[0];
-        $profile_get = $row[1];
-
-    } catch (PDOException $e) {
-
-    }
-    $pdo = null;
+//タイムラインなどを表示する番号(必須)
+if (isset($_GET["user_no"]) && $_GET["user_no"] != "") {
+    $user_no_show = $_GET["user_no"];
+}else{
+    header("location:error.html");
+    exit();
 }
 
-$id_name = "";
+$user_no = ""; //ログインしている番号
 session_start();
 session_regenerate_id(true);
-if (
-    isset($_SESSION["id_name"]) && $_SESSION["id_name"] != "" &&
-    isset($_SESSION["free_name"]) && $_SESSION["free_name"] != "" &&
-    isset($_SESSION["profile"])
-) {
-    $id_name = $_SESSION["id_name"];
-    $free_name = $_SESSION["free_name"];
-    $profile = $_SESSION["profile"];
+if (isset($_SESSION["user_no"]) && $_SESSION["user_no"] != "") {
+    $user_no = $_SESSION["user_no"];
+    //if($user_no_show = ""){$user_no_show =$user_no;}
 }
 
+$follow_rel="";
+
+try {
+    require_once("./system/DBInfo.php");
+    $pdo = new PDO(DBInfo::DNS, DBInfo::USER, DBInfo::PASSWORD);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+    if ($user_no != "") {
+        $sql = "select free_name, profile from user where user_no=?";
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindValue(1, $user_no);
+        $stmt->execute();
+        $row = $stmt->fetch();
+        $free_name = $row[0];
+        $row="";
+
+        $sql = "select follow_no from follow where following=? and followed=?";
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindValue(1, $user_no);
+        $stmt->bindValue(2, $user_no_show);
+        $stmt->execute();
+        if($row = $stmt->fetch()){
+            $follow_rel=true;
+        }else{
+            $follow_rel=false;
+        }
+
+    }
+
+    $sql = "select id_name, free_name, profile from user where user_no=?";
+    $stmt = $pdo->prepare($sql);
+    $stmt->bindValue(1, $user_no_show);
+    $stmt->execute();
+    $row = $stmt->fetch();
+    $id_name_show = $row[0];
+    $free_name_show = $row[1];
+    $profile_show = $row[2];
+    $row="";
+
+
+    $sql = "select count(tweet_no) from tweet where user_no=?";
+    $stmt = $pdo->prepare($sql);
+    $stmt->bindValue(1, $user_no_show);
+    $stmt->execute();
+    $row = $stmt->fetch();
+    $totalpage = ceil((int) $row[0] / 10);
+    $row="";
+
+
+    $sql = "select * from tweet  where user_no=? order by date desc, time desc  limit {$from},10";
+    $stmt = $pdo->prepare($sql);
+    $stmt->bindValue(1, $user_no_show);
+    $stmt->execute();
+
+    $pdo = null;
+
+} catch (PDOException $e) {
+    $pdo = null;
+    header("location:./error.html");
+}
+
+
+
+
+/*
 $free_name_use = "";
 if ($id_name_get == "") {
     $free_name_use = $free_name;
@@ -65,16 +111,16 @@ if ($id_name_get == "") {
 } else {
     $profile_use = $profile_get;
 }
-
-
+*/
+/*
 try {
     require_once("./system/DBInfo.php");
     $pdo = new PDO(DBInfo::DNS, DBInfo::USER, DBInfo::PASSWORD);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    $sql = "select count(tweet_no) from tweet where id_name=?";
+    $sql = "select count(tweet_no) from tweet where user_no=?";
     $stmt = $pdo->prepare($sql);
-    $stmt->bindValue(1, $id_name_use);
+    $stmt->bindValue(1, $user_no_show);
     $stmt->execute();
     $row = $stmt->fetch();
 
@@ -90,7 +136,7 @@ try {
 
 }
 $pdo = null;
-
+*/
 
 
 ?>
@@ -102,17 +148,19 @@ $pdo = null;
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>X blog</title>
     <link rel="stylesheet" href="my_timeline.css">
+    <script src="jquery.js"></script>
+    <script src="my_timeline.js"></script>
 </head>
 
 <body>
     <header>
-        <p>X blog</p>
+        <h1>X blog</h1>
 
         <?php
-        if ($id_name != "") {
+        if ($user_no != "") {
             print "
         <p>ようこそ、
-            <a href='my_timeline.php'>
+            <a href='my_timeline.php?user_no={$user_no}'>
                 {$free_name}
             </a>さん
         </p>
@@ -127,29 +175,33 @@ $pdo = null;
     <main>
         <section class="section1">
             <h2>
-                <?= $free_name_use ?>さんのプロフィール
+                <?= $free_name_show ?>さんのプロフィール
             </h2>
             <div>
                 <h3>アイコン</h3>
                 <h3>ユーザ名</h3>
                 <p>
-                    <?= $id_name_use ?>
+                    <?= $id_name_show ?>
                 </p>
                 <h3>表示名</h3>
                 <p>
-                    <?= $free_name_use ?>
+                    <?= $free_name_show ?>
                 </p>
                 <h3>自己紹介</h3>
                 <p>
-                    <?= $profile_use ?>
+                    <?= $profile_show ?>
                 </p>
                 <a href="following.php">フォロー一覧</a>
                 <?php
-                if ($id_name == $id_name_use) {
+                if ($user_no ==$user_no_show) {
                     print "
                 <a href='account_edit.php'>アカウント編集</a>
                 <a href='profile_edit.php'>プロフィール編集</a>
                 ";
+                } else if ($follow_rel==true) {
+                    print "<a class='follow' href='' data-ed='{$user_no_show}' data-onoff='on'>フォロー解除</a>";
+                } else if ($follow_rel==false){
+                    print "<a class='follow' href='' data-ed='{$user_no_show}' data-onoff='off'>フォローする</a>";
                 }
                 ?>
             </div>
@@ -160,6 +212,8 @@ $pdo = null;
                 <?php
                 while ($row = $stmt->fetch()) {
                     print("<li>");
+                    print("{$row[4]}");
+                    print("{$row[5]}");
                     print("{$row[1]}");
                     print("{$row[2]}");
                     print("{$row[3]}");
@@ -173,8 +227,8 @@ $pdo = null;
             for ($i = 1; $i <= $totalpage; $i++) {
                 if ($page == $i) {
                     print "<a>";
-                }else{
-                    print "<a href='?page={$i}&id_name={$id_name_use}'>";
+                } else {
+                    print "<a href='?page={$i}&user_no={$user_no_show}'>";
                 }
                 print "{$i} </a> &emsp;";
             }

@@ -32,11 +32,11 @@ try {
         <ul>
             <?php
             while( $row = $stmt->fetch()){
-                $row[5]=h($row[5]);
-                $row[3]=h($row[3]);
+                //$row[5]=h($row[5]);
+                //$row[3]=h($row[3]);
                 print"<li>
                         <div>
-                        'アイコン'
+                        アイコン
                         </div>
                         <div>
                         <p>{$row[5]}{$row[4]}</p>

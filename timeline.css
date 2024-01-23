@@ -1,0 +1,13 @@
+@charset "utf-8";
+
+ul{
+    list-style-type: none;
+}
+
+li{
+    border:1px solid gray;
+    background-color: cornsilk;
+    border-radius: 5px;
+    margin:5px;
+    padding:5px;
+}
