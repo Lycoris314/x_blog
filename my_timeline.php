@@ -179,6 +179,7 @@ $pdo = null;
             </h2>
             <div>
                 <h3>アイコン</h3>
+                <img src="image/<?= $user_no_show?>.png" alt="">
                 <h3>ユーザ名</h3>
                 <p>
                     <?= $id_name_show ?>
@@ -212,11 +213,15 @@ $pdo = null;
                 <?php
                 while ($row = $stmt->fetch()) {
                     print("<li>");
-                    print("{$row[4]}");
-                    print("{$row[5]}");
-                    print("{$row[1]}");
-                    print("{$row[2]}");
-                    print("{$row[3]}");
+                    print("<img class='min_img' src='image/{$user_no_show}.png'>");
+                    print("<div>");
+                   
+                    print("{$row[4]}{$row[5]}");
+                    print("<p>{$row[3]}</p>");
+                    print("<p>{$row[1]}{$row[2]}</p>");
+                    
+
+                    print("</div>");
                     print("</li>");
                 }
                 ?>

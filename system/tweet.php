@@ -13,17 +13,23 @@ session_regenerate_id(true);
 if (
     isset($_SESSION["user_no"]) && $_SESSION["user_no"] != "" &&
     isset($_POST["content"]) && $_POST["content"] != ""
-
 ) {
     $content = $_POST["content"];
-    $content = h($content);
-    $content = str_replace(PHP_EOL, "<br>", $content);
-
     $user_no = $_SESSION["user_no"];
 } else {
     header("location:../error.html");
     exit();
 }
+
+//$contentの調整
+$content = h($content);
+
+$content = preg_replace("/(@(\w{1,16}))[\s]|(@(\w{1,16}))$/m", "<a href='system/my_timeline_sub.php?id_name=$2$4'>$1$3</a> " ,$content);
+
+$content = str_replace(PHP_EOL, "<br>", $content);
+
+
+
 
 
 try {

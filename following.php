@@ -48,7 +48,7 @@ try {
 
 <body>
     <header>
-        <p>X blog</p>
+        <h1>X blog</h1>
         <p>ようこそ、
             <a href="my_timeline.php?user_no=<?=$user_no?>">
                 <?= $free_name ?>

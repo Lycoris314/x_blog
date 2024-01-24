@@ -76,10 +76,13 @@ try {
         <?php
         while ($row = $stmt->fetch()) {
             print "<li>";
+            print "<img class='min_img' src='image/{$row[5]}.png'>";
+            print "<div>";
             print "<a href='my_timeline.php?user_no={$row[5]}'>$row[4]</a> &nbsp;";
             print "<a href='my_timeline.php?user_no={$row[5]}'>@{$row[3]}</a>";
             print "<p>{$row[0]}</p>";
             print "<p>{$row[1]}{$row[2]}</p>";
+            print "</div>";
             print "</li>";
         }
         ?>
