@@ -75,6 +75,17 @@ try {
     $row="";
 
 
+    $sql = "select count(follow_no) from follow where following=?";
+    $stmt = $pdo->prepare($sql);
+    $stmt->bindValue(1, $user_no_show);
+    $stmt->execute();
+    $row = $stmt->fetch();
+    $following_count = $row[0];
+    $row="";
+
+
+
+
     $sql = "select * from tweet  where user_no=? order by date desc, time desc  limit {$from},10";
     $stmt = $pdo->prepare($sql);
     $stmt->bindValue(1, $user_no_show);
@@ -90,55 +101,6 @@ try {
 
 
 
-/*
-$free_name_use = "";
-if ($id_name_get == "") {
-    $free_name_use = $free_name;
-} else {
-    $free_name_use = $free_name_get;
-}
-
-$id_name_use = "";
-if ($id_name_get == "") {
-    $id_name_use = $id_name;
-} else {
-    $id_name_use = $id_name_get;
-}
-
-$profile_use = "";
-if ($id_name_get == "") {
-    $profile_use = $profile;
-} else {
-    $profile_use = $profile_get;
-}
-*/
-/*
-try {
-    require_once("./system/DBInfo.php");
-    $pdo = new PDO(DBInfo::DNS, DBInfo::USER, DBInfo::PASSWORD);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-    $sql = "select count(tweet_no) from tweet where user_no=?";
-    $stmt = $pdo->prepare($sql);
-    $stmt->bindValue(1, $user_no_show);
-    $stmt->execute();
-    $row = $stmt->fetch();
-
-    $totalpage = ceil((int) $row[0] / 10);
-
-
-    $sql = "select * from tweet  where id_name=? order by date desc, time desc  limit {$from},10";
-    $stmt = $pdo->prepare($sql);
-    $stmt->bindValue(1, $id_name_use);
-    $stmt->execute();
-
-} catch (PDOException $e) {
-
-}
-$pdo = null;
-*/
-
-
 ?>
 <!DOCTYPE html>
 <html lang="ja">
@@ -147,6 +109,7 @@ $pdo = null;
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>X blog</title>
+    <link rel="stylesheet" href="common.css">
     <link rel="stylesheet" href="my_timeline.css">
     <script src="jquery.js"></script>
     <script src="my_timeline.js"></script>
@@ -192,7 +155,7 @@ $pdo = null;
                 <p>
                     <?= $profile_show ?>
                 </p>
-                <a href="following.php">フォロー一覧</a>
+                <a href="following.php?user_no=<?=$user_no_show ?>">フォロー一覧(<?=$following_count ?>)</a>
                 <?php
                 if ($user_no ==$user_no_show) {
                     print "
@@ -201,7 +164,7 @@ $pdo = null;
                 ";
                 } else if ($follow_rel==true) {
                     print "<a class='follow' href='' data-ed='{$user_no_show}' data-onoff='on'>フォロー解除</a>";
-                } else if ($follow_rel==false){
+                } else if ($follow_rel==false && $user_no !=""){
                     print "<a class='follow' href='' data-ed='{$user_no_show}' data-onoff='off'>フォローする</a>";
                 }
                 ?>
@@ -212,7 +175,7 @@ $pdo = null;
             <ul>
                 <?php
                 while ($row = $stmt->fetch()) {
-                    print("<li>");
+                    print("<li class='tweet'>");
                     print("<img class='min_img' src='image/{$user_no_show}.png'>");
                     print("<div>");
                    

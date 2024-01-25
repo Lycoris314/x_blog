@@ -21,6 +21,7 @@ try {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>X blog</title>
+    <link rel="stylesheet" href="common.css">
 </head>
 <body>
     <header>
@@ -34,7 +35,7 @@ try {
             while( $row = $stmt->fetch()){
                 //$row[5]=h($row[5]);
                 //$row[3]=h($row[3]);
-                print"<li>
+                print"<li class='tweet'>
                         <div>
                         アイコン
                         </div>

@@ -36,7 +36,9 @@ try {
 
     $totalpage = ceil((int) $row[0] / 20);
 
-    $sql = "select distinct content ,date,time,id_name,free_name,user_no from tweet inner join follow on user_no=followed where user_no=? or following=? order by date desc,time desc  limit {$from},20;";
+    $sql = "select distinct content ,date,time,id_name,free_name,user_no from tweet left join follow on user_no=followed where user_no=? or following=? order by date desc,time desc  limit {$from},20";
+    //$sql = "select distinct content ,date,time,id_name,free_name,user_no from tweet inner join follow on user_no=followed where following=? order by date desc,time desc  limit {$from},20";
+
     $stmt = $pdo->prepare($sql);
     $stmt->bindValue(1, $user_no);
     $stmt->bindValue(2, $user_no);
@@ -56,6 +58,7 @@ try {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>X blog</title>
+    <link rel="stylesheet" href="common.css">
     <link rel="stylesheet" href="timeline.css">
 </head>
 
@@ -75,7 +78,7 @@ try {
         <ul>
         <?php
         while ($row = $stmt->fetch()) {
-            print "<li>";
+            print "<li class='tweet'>";
             print "<img class='min_img' src='image/{$row[5]}.png'>";
             print "<div>";
             print "<a href='my_timeline.php?user_no={$row[5]}'>$row[4]</a> &nbsp;";

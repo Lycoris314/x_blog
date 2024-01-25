@@ -39,6 +39,7 @@ try {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>X blog</title>
+    <link rel="stylesheet" href="common.css">
     <script src="jquery.js"></script>
     <script src="main.js"></script>
 </head>

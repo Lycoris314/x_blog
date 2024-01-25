@@ -12,14 +12,6 @@ body{
     margin:10px;
 }
 
-li{
-    list-style-type: none;
-    border:1px silver solid;
-    padding:5px;
-    margin:5px;
-    border-radius: 5px;
-    display: flex;
-}
 
 .min_img{
     width:100px;

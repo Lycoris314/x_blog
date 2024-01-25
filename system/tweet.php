@@ -5,8 +5,8 @@ function h($str)
     return htmlspecialchars($str, null, "UTF-8");
 }
 
-$user_no="";
-$content="";
+$user_no = "";
+$content = "";
 
 session_start();
 session_regenerate_id(true);
@@ -24,7 +24,10 @@ if (
 //$contentの調整
 $content = h($content);
 
-$content = preg_replace("/(@(\w{1,16}))[\s]|(@(\w{1,16}))$/m", "<a href='system/my_timeline_sub.php?id_name=$2$4'>$1$3</a> " ,$content);
+//$matches[1],$matches[2]にリプライするユーザのid_nameが入る
+preg_match_all("/@(\w{1,16})[\s]|@(\w{1,16})$/m", $content, $matches);
+
+$content = preg_replace("/(@(\w{1,16}))[\s]|(@(\w{1,16}))$/m", "<a href='system/my_timeline_sub.php?id_name=$2$4'>$1$3</a> ", $content);
 
 $content = str_replace(PHP_EOL, "<br>", $content);
 
@@ -47,20 +50,84 @@ try {
     $free_name = $row[1];
 
 
-    $sql = "insert into tweet values(NULL,?,?,?,?,?,?)";
+    $rep_user_no = "";
+    $list =new ArrayObject();
+
+    foreach ($matches[1] as $value) {
+        if ($value == "") {
+            continue;
+        }
+        $sql = "select user_no from user where id_name=?";
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindValue(1, $value);
+        $stmt->execute();
+        if ($row = $stmt->fetch()) {
+            print $row[0];
+            $rep_user_no = $rep_user_no . $row[0] . "/";
+            $list->append($row[0]);
+        }
+    }
+    //なぜか関数がうまく働かないので仕方なくコピペ
+    foreach ($matches[2] as $value) {
+        if ($value == "") {
+            continue;
+        }
+        $sql = "select user_no from user where id_name=?";
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindValue(1, $value);
+        $stmt->execute();
+        if ($row = $stmt->fetch()) {
+            $rep_user_no = $rep_user_no . $row[0] . "/";
+            $list->append($row[0]);
+        }
+    }
+
+    $sql = "select tweet_no from tweet order by tweet_no desc limit 1";
+    $stmt = $pdo->query($sql);
+    $stmt->execute();
+    $row = $stmt->fetch();
+    $tweet_no = $row[0] + 1;
+
+
+    $sql = "insert into tweet values(?,?,?,?,?,?,?)";
     $stmt = $pdo->prepare($sql);
-    $stmt->bindValue(1, date("Y-m-d"));
-    $stmt->bindValue(2, date("H:i:s"));
-    $stmt->bindValue(3, $content);
-    $stmt->bindValue(4, $id_name);
-    $stmt->bindValue(5, $free_name);
-    $stmt->bindValue(6, $user_no);
+    $stmt->bindValue(1, $tweet_no);
+    $stmt->bindValue(2, date("Y-m-d"));
+    $stmt->bindValue(3, date("H:i:s"));
+    $stmt->bindValue(4, $content);
+    $stmt->bindValue(5, $id_name);
+    $stmt->bindValue(6, $free_name);
+    $stmt->bindValue(7, $user_no);
 
     $pdo->beginTransaction();
     $stmt->execute();
     $pdo->commit();
+
+    $list=array_unique((array)$list);
+    print_r($list);
+
+    foreach ($list as $value) {
+        if ($value == "") {
+            continue;
+        }
+        $sql = "insert into notice values(NULL,?,?)";
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindValue(1, $tweet_no);
+        $stmt->bindValue(2, $value);
+
+        $pdo->beginTransaction();
+        $stmt->execute();
+        $pdo->commit();
+
+        print"ここは";
+    }
+
+
     $pdo = null;
     print "success";
+    print $rep_user_no;
+    print "success";
+    print_r($list );
 
     //リプライの通知機能を追加する。
     /*$sql2 = "select id_name from user";

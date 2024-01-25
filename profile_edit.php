@@ -13,12 +13,13 @@ try {
     $pdo = new PDO(DBInfo::DNS, DBInfo::USER, DBInfo::PASSWORD);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    $sql = "select free_name from user where user_no= ?";
+    $sql = "select free_name ,profile from user where user_no= ?";
     $stmt = $pdo->prepare($sql);
     $stmt->bindValue(1, $user_no);
     $stmt->execute();
     $row = $stmt->fetch();
     $free_name = $row[0];
+    $profile = $row[1];
     $pdo = null;
 
 } catch (PDOException $e) {
@@ -37,6 +38,7 @@ try {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>X blog</title>
+    <link rel="stylesheet" href="common.css">
     <link rel="stylesheet" href="profile_edit.css">
     <script src="jquery.js"></script>
     <script src="profile_edit.js"></script>
@@ -60,17 +62,17 @@ try {
         <h2>プロフィール編集</h2>
         <form id="form" action="system/profile_edit2.php" method="post" enctype="multipart/form-data">
             <p>アイコン</p>
-            <img src="" alt="人物アイコン">
+            <img src="image/<?=$user_no  ?>.png" alt="人物アイコン">
             <input type="file" id="upfile" name="upfile">
 
             <table>
                 <tr>
                     <td>表示名</td>
-                    <td><input name="free_name" type="text"></td>
+                    <td><input name="free_name" type="text" value=<?=$free_name?>></td>
                 </tr>
                 <tr>
                     <td>自己紹介</td>
-                    <td><textarea name="profile" id="" cols="30" rows="10"></textarea></td>
+                    <td><textarea name="profile" id="" cols="30" rows="10"><?=$profile?></textarea></td>
                 </tr>
             </table>
 
