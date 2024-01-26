@@ -1,3 +1,10 @@
+<?php
+    $msg="エラーが発生しました。";
+    if(isset($_GET["msg"]) && $_GET["msg"] != ""){
+        $msg = $_GET["msg"];
+    }
+?>
+
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -6,6 +13,6 @@
     <title>X blog</title>
 </head>
 <body>
-    <p>エラーが発生しました。</p>
+    <p><?= $msg ?></p>
 </body>
 </html>

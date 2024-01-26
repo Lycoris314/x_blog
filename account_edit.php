@@ -36,30 +36,44 @@ try {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>X blog</title>
+    <link rel="stylesheet" href="common.css">
     <script src="jquery.js"></script>
     <script src="account_edit.js"></script>
 </head>
 
 <body>
     <header>
-
+        <h1>X blog</h1>
+        <p>ようこそ、
+            <a href="my_timeline.php?user_no=<?= $user_no ?>">
+                <?= $free_name ?>
+            </a>さん
+        </p>
+        <a href="timeline.php">タイムライン</a>
+        <a href="notice.php">通知</a>
+        <a href="main.php">発言する</a>
+        <a href="system/system_logout.php">ログアウト</a>
     </header>
+
     <main>
         <h2>アカウント編集</h2>
-        <form action="system/system_account_edit.php" method="get">
+        <form id="form">
             <table>
                 <tbody>
                     <tr>
                         <td>現在のユーザ名</td>
-                        <td><?= $id_name ?></td>
+                        <td>
+                            <?= $id_name ?>
+                        </td>
                     </tr>
                     <tr>
                         <td>新しいユーザ名</td>
-                        <td><input id="new_id_name" type="text" name="new_id_name" value="<?= $id_name ?>" required></td>
+                        <td><input id="new_id_name" type="text" name="new_id_name" value="<?= $id_name ?>" required>
+                        </td>
                     </tr>
                     <tr>
                         <td>現在のパスワード</td>
-                        <td><input type="text" name="password" required></td>
+                        <td><input id="password" type="text" name="password" required></td>
                     </tr>
                     <tr>
                         <td>新しいパスワード</td>
@@ -71,10 +85,42 @@ try {
                     </tr>
                 </tbody>
             </table>
-            <button>確認</button>
-            <p></p>
+            <button form="form">確認</button>
+            <p class="wrong"></p>
         </form>
+
     </main>
+
+    <div class="cfm">
+        <h2>アカウント編集</h2>
+        <table>
+            <tbody>
+                <tr>
+                    <td>現在のユーザ名</td>
+                    <td>
+                        <?= $id_name ?>
+                    </td>
+                </tr>
+                <tr>
+                    <td>新しいユーザ名</td>
+                    <td>
+                        <p class="id_name"></p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>新しいパスワード</td>
+                    <td>セキュリティのため表示しません</td>
+                </tr>
+            </tbody>
+        </table>
+        <button type="button" class="back">戻る</button>
+        <form id="form2" action="system/system_account_edit_exe.php" method="get">
+            <input type="hidden" name=new_id_name id="new_id_name2">
+            <input type="hidden" name=password id="password2">
+            <input type="hidden" name=new_password id="new_password2">
+        <button>送信</button>
+        </form>
+    </div>
 </body>
 
 </html>

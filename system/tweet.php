@@ -110,7 +110,7 @@ try {
         if ($value == "") {
             continue;
         }
-        $sql = "insert into notice values(NULL,?,?)";
+        $sql = "insert into notice values(NULL,?,?,0)";
         $stmt = $pdo->prepare($sql);
         $stmt->bindValue(1, $tweet_no);
         $stmt->bindValue(2, $value);

@@ -23,7 +23,7 @@ try {
 
 } catch (PDOException $e) {
     $pdo = null;
-    header("location:error.html");
+    header("location:../error.html");
     exit();
 }
 

@@ -1,3 +1,4 @@
+//多分もう不要になった
 onload=()=>{
     document.querySelector("#back").onclick=()=>{
         history.back();

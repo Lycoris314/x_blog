@@ -84,7 +84,7 @@ try {
     <div class="cfm">
         <h2>プロフィール編集</h2>
         <p>アイコン</p>
-        <img src="" alt="人物アイコン">
+        <img src="image/<?=$user_no  ?>.png" alt="人物アイコン">
         <table>
             <tr>
                 <td>表示名</td>

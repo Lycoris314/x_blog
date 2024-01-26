@@ -33,6 +33,8 @@ try {
     $pdo = new PDO(DBInfo::DNS, DBInfo::USER, DBInfo::PASSWORD);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
+    require_once("uncfm_no.php");
+
     if ($user_no != "") {
         $sql = "select free_name, profile from user where user_no=?";
         $stmt = $pdo->prepare($sql);
@@ -128,10 +130,14 @@ try {
             </a>さん
         </p>
         <a href='timeline.php'>タイムライン</a>
-        <a href='notice.php'>通知</a>
+        <a href='notice.php'>通知{$text_uncfm}</a>
         <a href='main.php'>発言する</a>
         <a href='system/system_logout.php'>ログアウト</a>
         ";
+        }else{
+            print "
+                <a href='login.html'>ログイン</a>
+            ";
         }
         ?>
     </header>
@@ -179,9 +185,9 @@ try {
                     print("<img class='min_img' src='image/{$user_no_show}.png'>");
                     print("<div>");
                    
-                    print("{$row[4]}{$row[5]}");
+                    print("{$row[4]} {$row[5]}");
                     print("<p>{$row[3]}</p>");
-                    print("<p>{$row[1]}{$row[2]}</p>");
+                    print("<p>{$row[1]} {$row[2]}</p>");
                     
 
                     print("</div>");
@@ -190,7 +196,7 @@ try {
                 ?>
             </ul>
         </section>
-        <section>
+        <section class="pagenation">
             <?php
             for ($i = 1; $i <= $totalpage; $i++) {
                 if ($page == $i) {

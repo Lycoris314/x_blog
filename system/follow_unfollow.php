@@ -12,8 +12,8 @@ if (isset($_SESSION["user_no"]) && $_SESSION["user_no"] != "" &&
     
 } else {
     
-    //header("location:../error.html");
-    //exit();
+    header("location:../error.php");
+    exit();
 }
 
 try {
@@ -46,19 +46,26 @@ try {
         $row = $stmt->fetch();
         $tweet_no = $row[0] + 1;
 
+        $sql = "select id_name from user where user_no=?";
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindValue(1, $user_no);
+        $stmt->execute();
+        $row = $stmt->fetch();
+        $id_name=$row[0];
 
-        $content="{$user_no}さんにフォローされました。";
+
+        $content="お知らせ：<a href='my_timeline.php?user_no={$user_no}'>@{$id_name}</a> さんにフォローされました。";
         $sql2="insert into tweet values(?,?,?,?,?,?,?)";
         $stmt2 = $pdo->prepare($sql2);
         $stmt2->bindValue(1, $tweet_no);
         $stmt2->bindValue(2, date("Y-m-d"));
         $stmt2->bindValue(3, date("H:i:s"));
         $stmt2->bindValue(4, $content);
-        $stmt2->bindValue(5, "X_blog");
-        $stmt2->bindValue(6, "X_blog");
+        $stmt2->bindValue(5, "Xblog");
+        $stmt2->bindValue(6, "Xblog");
         $stmt2->bindValue(7, 0);
 
-        $sql3="insert into notice values(NULL,?,?)";
+        $sql3="insert into notice values(NULL,?,?,0)";
         $stmt3 = $pdo->prepare($sql3);
         $stmt3->bindValue(1, $tweet_no);
         $stmt3->bindValue(2, $ed);
@@ -77,6 +84,6 @@ try {
         $pdo->rollBack();
     }
     $pdo = null;
-    //header("location:../error.html");
-    print($e->getMessage());
+    header("location:../error.php");
+    //print($e->getMessage());
 }

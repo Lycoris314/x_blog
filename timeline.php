@@ -15,10 +15,18 @@ if (isset($_SESSION["user_no"]) && $_SESSION["user_no"] != "") {
     header("location:timeline_no_login.php");
     exit();
 }
+
+
 try {
     require_once("./system/DBInfo.php");
     $pdo = new PDO(DBInfo::DNS, DBInfo::USER, DBInfo::PASSWORD);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+    require_once("uncfm_no.php");
+    $msg="";
+    if (isset($_GET["login"]) && $_GET["login"] == 1 && $uncfm_no !=0) {
+        $msg="未読の通知が{$uncfm_no}件あります。";
+    }
 
     $sql = "select free_name from user where user_no=?";
     $stmt = $pdo->prepare($sql);
@@ -66,12 +74,13 @@ try {
     <header>
         <h1>X blog</h1>
         <p>ようこそ、
-            <a href="my_timeline.php?user_no=<?=$user_no ?>"><?= $free_name ?></a>さん
+            <a href="my_timeline.php?user_no=<?=$user_no ?>"><?= $free_name ?></a> さん
         </p>
         <a href="timeline.php">タイムライン</a>
-        <a href="notice.php">通知</a>
+        <a href="notice.php">通知<?=$text_uncfm?></a>
         <a href="main.php">発言する</a>
         <a href="system/system_logout.php">ログアウト</a>
+        <p><?= $msg ?></p>
     </header>
     <main>
         <h2>タイムライン</h2>
@@ -91,7 +100,7 @@ try {
         ?>
         </ul>
 
-        <section>
+        <section class="pagenation">
             <?php
             for ($i = 1; $i <= $totalpage; $i++) {
                 if ($page == $i) {

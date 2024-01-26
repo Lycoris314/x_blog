@@ -93,11 +93,16 @@ try {
 
             while ($row = $stmt->fetch()) {
                 //$row[1]=h($row[1]);
-                print("<li>");
-                print("<a href='my_timeline.php?user_no={$row[3]}'>{$row[0]}</a>");
-                print("{$row[1]}");
-                print("{$row[2]}");
-                print("</li>");
+                print("
+                <li class='tweet'>
+                    <img src='image/{$row[3]}.png'>
+                    <div>
+                    <a href='my_timeline.php?user_no={$row[3]}'>{$row[0]}</a>
+                    {$row[1]}
+                    <p>{$row[2]}</p>
+                    </div>
+                </li>
+                ");
             }
             ?>
         </ul>

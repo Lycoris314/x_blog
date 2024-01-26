@@ -22,6 +22,13 @@ try {
     $row = $stmt->fetch();
     $free_name = $row[0];
 
+    $sql = "update notice set confirm =1 where user_no=?";
+    $stmt = $pdo->prepare($sql);
+    $stmt->bindValue(1, $user_no);
+    $pdo->beginTransaction();
+    $stmt->execute();
+    $pdo->commit();
+
 
     $sql = "select distinct content ,date,time,id_name,free_name,tweet.user_no from tweet inner join notice on tweet.tweet_no=notice.tweet_no where notice.user_no=? order by date desc,time desc  limit 0,20";
     $stmt = $pdo->prepare($sql);
@@ -70,9 +77,9 @@ try {
                     print("<img class='min_img' src='image/{$row[5]}.png'>");
                     print("<div>");
                    
-                    print("{$row[3]}{$row[4]}");
+                    print("{$row[3]} {$row[4]}");
                     print("<p>{$row[0]}</p>");
-                    print("<p>{$row[1]}{$row[2]}</p>");
+                    print("<p>{$row[1]} {$row[2]}</p>");
                     
 
                     print("</div>");

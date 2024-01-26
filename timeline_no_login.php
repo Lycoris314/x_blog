@@ -1,15 +1,34 @@
 <?php
-function h($str){
+/*function h($str){
     return htmlspecialchars($str,null,"UTF-8");
+}*/
+
+$page = 1;
+if (isset($_GET["page"]) && is_numeric($_GET["page"])) {
+    $page = (int) $_GET["page"];
 }
+$from = ($page - 1) * 20;
+
 
 try {
     require_once("./system/DBInfo.php");
     $pdo = new PDO(DBInfo::DNS, DBInfo::USER, DBInfo::PASSWORD);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    $sql = "select * from tweet order by date desc, time desc  limit 20";
+
+    $sql = "select count(tweet_no) from tweet where not user_no=0";
     $stmt = $pdo->query($sql);
+    $stmt->execute();
+    $row = $stmt->fetch();
+    $totalpage = ceil((int) $row[0] / 20);
+
+
+    $sql = "select * from tweet where not user_no=0 order by date desc, time desc  limit {$from},20";
+    $stmt = $pdo->query($sql);
+
+
+
+    
 
 } catch (PDOException $e) {
 
@@ -33,12 +52,8 @@ try {
         <ul>
             <?php
             while( $row = $stmt->fetch()){
-                //$row[5]=h($row[5]);
-                //$row[3]=h($row[3]);
                 print"<li class='tweet'>
-                        <div>
-                        アイコン
-                        </div>
+                        <img src='image/{$row[6]}.png'>
                         <div>
                         <p>{$row[5]}{$row[4]}</p>
                         <p>{$row[3]}</p>
@@ -48,6 +63,19 @@ try {
             }
             ?>
         </ul>
+
+        <section class="pagenation">
+            <?php
+            for ($i = 1; $i <= $totalpage; $i++) {
+                if ($page == $i) {
+                    print "<a>";
+                }else{
+                    print "<a href='?page={$i}'>";
+                }
+                print "{$i} </a> &emsp;";
+            }
+            ?>
+        </section>
     </main>
 </body>
 </html>

@@ -28,3 +28,16 @@ img{
     width: 100px;
     height: 100px;
 }
+
+textarea{
+    border-radius: 5px;
+    border:silver solid 3px;
+}
+
+.cfm{
+    display:none;
+}
+
+.pagenation{
+    text-align: center;
+}
