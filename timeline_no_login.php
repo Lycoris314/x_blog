@@ -45,7 +45,7 @@ try {
 <body>
     <header>
         <h1>X blog</h1>
-        <a href="login.html">ログイン</a>
+        <p class="to_login"><a href="login.html">ログイン</a></p>
     </header>
     <main>
         <h2>タイムライン</h2>
@@ -55,9 +55,9 @@ try {
                 print"<li class='tweet'>
                         <img src='image/{$row[6]}.png'>
                         <div>
-                        <p>{$row[5]}{$row[4]}</p>
+                        <p>{$row[5]} <a href='my_timeline.php?user_no={$row[6]}'>{$row[4]}</a></p>
                         <p>{$row[3]}</p>
-                        <p>{$row[1]}{$row[2]}</p>
+                        <p class='time'>{$row[1]} {$row[2]}</p>
                         </div>
                      </li>";
             }

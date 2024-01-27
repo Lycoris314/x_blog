@@ -17,19 +17,22 @@ if (
     $content = $_POST["content"];
     $user_no = $_SESSION["user_no"];
 } else {
-    header("location:../error.html");
+    header("location:../error.php");
     exit();
 }
 
-//$contentの調整
-$content = h($content);
+
+
+
 
 //$matches[1],$matches[2]にリプライするユーザのid_nameが入る
-preg_match_all("/@(\w{1,16})[\s]|@(\w{1,16})$/m", $content, $matches);
+//preg_match_all("/@(\w{1,16})[\s]|@(\w{1,16})$/m", $content, $matches);
+/*preg_match_all("/@(\w{1,16})[\s]/m", $content, $matches);
+
 
 $content = preg_replace("/(@(\w{1,16}))[\s]|(@(\w{1,16}))$/m", "<a href='system/my_timeline_sub.php?id_name=$2$4'>$1$3</a> ", $content);
 
-$content = str_replace(PHP_EOL, "<br>", $content);
+$content = str_replace(PHP_EOL, "<br>", $content);*/
 
 
 
@@ -40,6 +43,39 @@ try {
     $pdo = new PDO(DBInfo::DNS, DBInfo::USER, DBInfo::PASSWORD);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
+    $content = h($content);
+
+    $content .= " ";
+
+
+    $list = new ArrayObject();
+
+    $content =
+        preg_replace_callback(
+            "/(@([a-zA-Z0-9]{1,16}))(\s)/",
+            function ($m) {
+
+                global $pdo, $list;
+
+                $sql = "select user_no from user where id_name='{$m[2]}'";
+
+                $stmt = $pdo->query($sql);
+                $stmt->execute();
+
+                if ($row = $stmt->fetch()) {
+
+                    $list->append($row[0]);
+                    return "<a href='my_timeline.php?user_no={$row[0]}'>{$m[1]}</a>$m[3]";
+                } else {
+                    return $m[1];
+                }
+            },
+            $content
+        );
+
+    $content = str_replace(PHP_EOL, "<br>", $content);
+
+
     $sql = "select id_name, free_name from user where user_no=?";
     $stmt = $pdo->prepare($sql);
     $stmt->bindValue(1, $user_no);
@@ -49,11 +85,9 @@ try {
     $id_name = $row[0];
     $free_name = $row[1];
 
+    //$list =new ArrayObject();
 
-    $rep_user_no = "";
-    $list =new ArrayObject();
-
-    foreach ($matches[1] as $value) {
+    /*foreach ($matches[1] as $value) {
         if ($value == "") {
             continue;
         }
@@ -67,7 +101,7 @@ try {
             $list->append($row[0]);
         }
     }
-    //なぜか関数がうまく働かないので仕方なくコピペ
+    なぜか関数がうまく働かないので仕方なくコピペ
     foreach ($matches[2] as $value) {
         if ($value == "") {
             continue;
@@ -80,7 +114,9 @@ try {
             $rep_user_no = $rep_user_no . $row[0] . "/";
             $list->append($row[0]);
         }
-    }
+    }*/
+
+
 
     $sql = "select tweet_no from tweet order by tweet_no desc limit 1";
     $stmt = $pdo->query($sql);
@@ -103,13 +139,12 @@ try {
     $stmt->execute();
     $pdo->commit();
 
-    $list=array_unique((array)$list);
-    print_r($list);
+    $list = array_unique((array) $list);
 
     foreach ($list as $value) {
-        if ($value == "") {
+        /*if ($value == "") {
             continue;
-        }
+        }*/
         $sql = "insert into notice values(NULL,?,?,0)";
         $stmt = $pdo->prepare($sql);
         $stmt->bindValue(1, $tweet_no);
@@ -119,15 +154,9 @@ try {
         $stmt->execute();
         $pdo->commit();
 
-        print"ここは";
     }
-
-
     $pdo = null;
     print "success";
-    print $rep_user_no;
-    print "success";
-    print_r($list );
 
     //リプライの通知機能を追加する。
     /*$sql2 = "select id_name from user";
@@ -144,5 +173,7 @@ try {
         $pdo->rollBack();
     }
     $pdo = null;
-    //header("location:../error.html");
+
+    print $e->getMessage();
+    //header("location:../error.php");
 }

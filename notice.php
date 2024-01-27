@@ -14,6 +14,8 @@ try {
     $pdo = new PDO(DBInfo::DNS, DBInfo::USER, DBInfo::PASSWORD);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
+    require_once("uncfm_no.php");
+
     $sql = "select free_name from user where user_no=?";
     $stmt = $pdo->prepare($sql);
     $stmt->bindValue(1, $user_no);
@@ -48,46 +50,55 @@ try {
 
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>X blog</title>
     <link rel="stylesheet" href="common.css">
-    <link rel="stylesheet" href="notice.css">
 </head>
+
 <body>
     <header>
-        <h1>X blog</h1>
+        <div>
+            <h1>X blog</h1>
+            <img src="image/0.png" alt="X blog">
+        </div>
         <p>ようこそ、
-            <a href="my_timeline.php?user_no=<?=$user_no?>">
+            <a href="my_timeline.php?user_no=<?= $user_no ?>">
                 <?= $free_name ?>
             </a>さん
         </p>
-        <a href="timeline.php">タイムライン</a>
-        <a href="notice.php">通知</a>
-        <a href="main.php">発言する</a>
-        <a href="system/system_logout.php">ログアウト</a>
+        <ul>
+            <li><a href="timeline.php">タイムライン</a></li>
+            <li><a href="notice.php">通知
+                    <?= $text_uncfm ?>
+                </a></li>
+            <li><a href="main.php">発言する</a></li>
+            <li><a href="system/system_logout.php">ログアウト</a></li>
+        </ul>
     </header>
     <main>
         <h2>通知</h2>
         <ul>
-                <?php
-                while ($row = $stmt->fetch()) {
-                    print("<li class='tweet'>");
-                    print("<img class='min_img' src='image/{$row[5]}.png'>");
-                    print("<div>");
-                   
-                    print("{$row[3]} {$row[4]}");
-                    print("<p>{$row[0]}</p>");
-                    print("<p>{$row[1]} {$row[2]}</p>");
-                    
+            <?php
+            while ($row = $stmt->fetch()) {
+                print("<li class='tweet'>");
+                print("<img class='min_img' src='image/{$row[5]}.png'>");
+                print("<div>");
 
-                    print("</div>");
-                    print("</li>");
-                }
-                ?>
-            </ul>
+                print("{$row[4]} <a href='my_timeline.php?user_no={$row[5]}'>{$row[3]}</a>");
+                print("<p>{$row[0]}</p>");
+                print("<p class='time'>{$row[1]} {$row[2]}</p>");
+
+
+                print("</div>");
+                print("</li>");
+            }
+            ?>
+        </ul>
 
     </main>
 </body>
+
 </html>

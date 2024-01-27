@@ -2,15 +2,16 @@
 
 
 .section1>div{
-    background-color: rgb(255, 230, 230);
-    border:silver 3px solid;
-    border-radius: 10px;
+    background-image:linear-gradient(0deg,rgb(230, 230, 230),white);
+    border:rgb(220, 220, 220) 3px solid;
     padding:10px;
     margin:10px;
 }
 
+.section2 div p{
+    padding-bottom: 10px;
+}
 
-.min_img{
-    width:100px;
-    height:100px;
+.self_intro{
+    margin: 20px 0;
 }

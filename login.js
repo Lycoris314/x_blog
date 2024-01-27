@@ -15,7 +15,7 @@ $(()=>{
             if(data=="success"){
                 location="timeline.php?login=1";
             }else{
-                $("p").text("ユーザ名またはパスワードが間違っています。");
+                $("p.msg").text("ユーザ名またはパスワードが間違っています。");
             }
         })
     })

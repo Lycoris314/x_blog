@@ -1,4 +1,5 @@
 <?php
+
 session_start();
 session_regenerate_id(true);
 if (isset($_SESSION["user_no"]) && $_SESSION["user_no"] != "") {
@@ -39,7 +40,6 @@ try {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>X blog</title>
     <link rel="stylesheet" href="common.css">
-    <link rel="stylesheet" href="profile_edit.css">
     <script src="jquery.js"></script>
     <script src="profile_edit.js"></script>
 </head>
@@ -58,33 +58,37 @@ try {
         <a href="system/system_logout.php">ログアウト</a>
     </header>
 
-    <main>
+    <main class="profile_edit">
         <h2>プロフィール編集</h2>
         <form id="form" action="system/profile_edit2.php" method="post" enctype="multipart/form-data">
             <p>アイコン</p>
-            <img src="image/<?=$user_no  ?>.png" alt="人物アイコン">
+            <img src="image/<?= $user_no ?>.png" alt="人物アイコン">
             <input type="file" id="upfile" name="upfile">
+            <p class="small_font">png形式のみ利用できます。</p>
 
             <table>
                 <tr>
                     <td>表示名</td>
-                    <td><input name="free_name" type="text" value=<?=$free_name?>></td>
+                    <td><input name="free_name" type="text" value=<?= $free_name ?> maxlength="20">
+                        <p class="small_font">表示名は1文字以上20文字以内です。</p>
+                    </td>
                 </tr>
                 <tr>
                     <td>自己紹介</td>
-                    <td><textarea name="profile" id="" cols="30" rows="10"><?=$profile?></textarea></td>
+                    <td><textarea name="profile" id="" cols="30" rows="10"><?= $profile ?></textarea></td>
                 </tr>
             </table>
-
-            <button type=reset>キャンセル</button>
-            <button class="to_cfm" type="button">確認</button>
+            <div class="profile_edit">
+                <button type="reset">キャンセル</button>
+                <button class="to_cfm" type="button">確認</button>
+            </div>
         </form>
     </main>
 
     <div class="cfm">
         <h2>プロフィール編集</h2>
         <p>アイコン</p>
-        <img src="image/<?=$user_no  ?>.png" alt="人物アイコン">
+        <img src="image/<?= $user_no ?>.png" alt="人物アイコン">
         <table>
             <tr>
                 <td>表示名</td>

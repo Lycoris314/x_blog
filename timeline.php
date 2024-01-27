@@ -10,7 +10,7 @@ $from = ($page - 1) * 20;
 session_start();
 session_regenerate_id(true);
 if (isset($_SESSION["user_no"]) && $_SESSION["user_no"] != "") {
-    $user_no= $_SESSION["user_no"];
+    $user_no = $_SESSION["user_no"];
 } else {
     header("location:timeline_no_login.php");
     exit();
@@ -23,9 +23,9 @@ try {
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
     require_once("uncfm_no.php");
-    $msg="";
-    if (isset($_GET["login"]) && $_GET["login"] == 1 && $uncfm_no !=0) {
-        $msg="未読の通知が{$uncfm_no}件あります。";
+    $msg = "";
+    if (isset($_GET["login"]) && $_GET["login"] == 1 && $uncfm_no != 0) {
+        $msg = "未読の通知が{$uncfm_no}件あります。";
     }
 
     $sql = "select free_name from user where user_no=?";
@@ -33,9 +33,9 @@ try {
     $stmt->bindValue(1, $user_no);
     $stmt->execute();
     $row = $stmt->fetch();
-    $free_name=$row[0];
+    $free_name = $row[0];
 
-    $sql = "select count(tweet_no) from tweet inner join follow on user_no=followed where user_no=? or following=?";
+    $sql = "select count(distinct tweet_no) from tweet inner join follow on user_no=followed where user_no=? or following=?";
     $stmt = $pdo->prepare($sql);
     $stmt->bindValue(1, $user_no);
     $stmt->bindValue(2, $user_no);
@@ -67,37 +67,46 @@ try {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>X blog</title>
     <link rel="stylesheet" href="common.css">
-    <link rel="stylesheet" href="timeline.css">
 </head>
 
 <body>
     <header>
-        <h1>X blog</h1>
+        <div>
+            <h1>X blog</h1>
+            <img src="image/0.png" alt="X blog">
+        </div>
         <p>ようこそ、
-            <a href="my_timeline.php?user_no=<?=$user_no ?>"><?= $free_name ?></a> さん
+            <a href="my_timeline.php?user_no=<?= $user_no ?>">
+                <?= $free_name ?>
+            </a>さん
         </p>
-        <a href="timeline.php">タイムライン</a>
-        <a href="notice.php">通知<?=$text_uncfm?></a>
-        <a href="main.php">発言する</a>
-        <a href="system/system_logout.php">ログアウト</a>
-        <p><?= $msg ?></p>
+
+        <ul>
+            <li><a href="timeline.php">タイムライン</a></li>
+            <li><a href="notice.php">通知
+                    <?= $text_uncfm ?>
+                </a></li>
+            <li><a href="main.php">発言する</a></li>
+            <li><a href="system/system_logout.php">ログアウト</a></li>
+        </ul>
+        <p><?=$msg?></p>
     </header>
     <main>
         <h2>タイムライン</h2>
         <ul>
-        <?php
-        while ($row = $stmt->fetch()) {
-            print "<li class='tweet'>";
-            print "<img class='min_img' src='image/{$row[5]}.png'>";
-            print "<div>";
-            print "<a href='my_timeline.php?user_no={$row[5]}'>$row[4]</a> &nbsp;";
-            print "<a href='my_timeline.php?user_no={$row[5]}'>@{$row[3]}</a>";
-            print "<p>{$row[0]}</p>";
-            print "<p>{$row[1]}{$row[2]}</p>";
-            print "</div>";
-            print "</li>";
-        }
-        ?>
+            <?php
+            while ($row = $stmt->fetch()) {
+                print "<li class='tweet'>";
+                print "<img class='min_img' src='image/{$row[5]}.png'>";
+                print "<div>";
+                print "<a href='my_timeline.php?user_no={$row[5]}'>$row[4]</a> &nbsp;";
+                print "<a href='my_timeline.php?user_no={$row[5]}'>@{$row[3]}</a>";
+                print "<p>{$row[0]}</p>";
+                print "<p class='time'>{$row[1]} {$row[2]}</p>";
+                print "</div>";
+                print "</li>";
+            }
+            ?>
         </ul>
 
         <section class="pagenation">
@@ -105,7 +114,7 @@ try {
             for ($i = 1; $i <= $totalpage; $i++) {
                 if ($page == $i) {
                     print "<a>";
-                }else{
+                } else {
                     print "<a href='?page={$i}'>";
                 }
                 print "{$i} </a> &emsp;";

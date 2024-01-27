@@ -5,7 +5,7 @@ session_regenerate_id(true);
 if (isset($_SESSION["user_no"]) && $_SESSION["user_no"] != "") {
     $user_no = $_SESSION["user_no"];
 } else {
-    header("location:error.html");
+    header("location:error.php");
     exit();
 }
 
@@ -21,21 +21,21 @@ try {
 
     $row = $stmt->fetch();
     $free_name = $row[0];
-    
-    require_once("uncfm_no.php");
-/*
-    $sql_uncfm = "select count(notice_no) from notice where user_no=? and confirm=0";
-    $stmt_uncfm = $pdo->prepare($sql_uncfm);
-    $stmt_uncfm->bindValue(1, $user_no);
-    $stmt_uncfm->execute();
 
-    $row_uncfm = $stmt_uncfm->fetch();
-    $uncfm_no = $row_uncfm[0];
-    $text_uncfm="";
-    if($uncfm_no !=0){
-        $text_uncfm="({$uncfm_no})";
-    }
-*/
+    require_once("uncfm_no.php");
+    /*
+        $sql_uncfm = "select count(notice_no) from notice where user_no=? and confirm=0";
+        $stmt_uncfm = $pdo->prepare($sql_uncfm);
+        $stmt_uncfm->bindValue(1, $user_no);
+        $stmt_uncfm->execute();
+
+        $row_uncfm = $stmt_uncfm->fetch();
+        $uncfm_no = $row_uncfm[0];
+        $text_uncfm="";
+        if($uncfm_no !=0){
+            $text_uncfm="({$uncfm_no})";
+        }
+    */
     $pdo = null;
 
 } catch (PDOException $e) {
@@ -60,23 +60,31 @@ try {
 
 <body>
     <header>
-        <h1>X blog</h1>
+        <div>
+            <h1>X blog</h1>
+            <img src="image/0.png" alt="X blog">
+        </div>
         <p>ようこそ、
-            <a href="my_timeline.php?user_no=<?=$user_no?>">
+            <a href="my_timeline.php?user_no=<?= $user_no ?>">
                 <?= $free_name ?>
             </a>さん
         </p>
-        <a href="timeline.php">タイムライン</a>
-        <a href="notice.php">通知<?=$text_uncfm?></a>
-        <a href="main.php">発言する</a>
-        <a href="system/system_logout.php">ログアウト</a>
+        <ul>
+            <li><a href="timeline.php">タイムライン</a></li>
+            <li><a href="notice.php">通知
+                    <?= $text_uncfm ?>
+                </a></li>
+            <li><a href="main.php">発言する</a></li>
+            <li><a href="system/system_logout.php">ログアウト</a></li>
+        </ul>
     </header>
-    <main>
+
+    <main class="main">
         <h2>発言する</h2>
         <form id=tweet action="system/tweet.php" method="post">
-            <textarea name="content" cols="30" rows="10" required></textarea>
+            <textarea name="content" cols="40" rows="15" required></textarea>
 
-            <button>送信</button>
+            <p class='main'><button>送信</button></p>
         </form>
         <p id="tweeted"></p>
     </main>

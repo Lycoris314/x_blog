@@ -47,7 +47,7 @@ try {
 
 } catch (PDOException $e) {
     $pdo = null;
-    header("location:error.html");
+    header("location:error.php");
     exit();
 }
 
@@ -81,6 +81,10 @@ try {
             <a href='main.php'>発言する</a>
             <a href='system/system_logout.php'>ログアウト</a>
             ";
+        }else{
+            print "
+                <a href='login.html'>ログイン</a>
+            ";
         }
         ?>
     </header>
@@ -92,13 +96,14 @@ try {
             <?php
 
             while ($row = $stmt->fetch()) {
-                //$row[1]=h($row[1]);
+               
                 print("
                 <li class='tweet'>
                     <img src='image/{$row[3]}.png'>
                     <div>
-                    <a href='my_timeline.php?user_no={$row[3]}'>{$row[0]}</a>
                     {$row[1]}
+                    <a href='my_timeline.php?user_no={$row[3]}'>{$row[0]}</a>
+                    
                     <p>{$row[2]}</p>
                     </div>
                 </li>

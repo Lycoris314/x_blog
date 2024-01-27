@@ -12,7 +12,7 @@ if (
     $new_password = $_GET["new_password"];
     $user_no = $_SESSION["user_no"];
 } else {
-    header("location:../error.html");
+    header("location:../error.php");
     exit();
 }
 
@@ -30,16 +30,25 @@ try {
     if($row = $stmt->fetch()){
         //新しいIDとパスワードの適正チェック
 
-        //$_SESSION["new_id_name"]=$new_id_name;
-        //$_SESSION["new_password"]=$new_password;
+        $sql="select user_no from user where id_name=? and not user_no=?";
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindValue(1,$new_id_name);
+        $stmt->bindValue(2,$user_no);
 
-        print "success";
+        $stmt->execute();
+        if($row = $stmt->fetch()){
+            print "duplicate";
+        } else {
+            print "success";
+        }
+    }else{
+        print "wrong password";
     };
     $pdo=null;
 
 } catch (PDOException $e) {
     print $e->getMessage();
     $pdo = null;
-    header("location:../error.html");
+    header("location:../error.php");
     exit();
 }

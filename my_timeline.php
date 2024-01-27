@@ -13,7 +13,7 @@ $from = ($page - 1) * 10;
 //タイムラインなどを表示する番号(必須)
 if (isset($_GET["user_no"]) && $_GET["user_no"] != "") {
     $user_no_show = $_GET["user_no"];
-}else{
+} else {
     header("location:error.html");
     exit();
 }
@@ -26,7 +26,7 @@ if (isset($_SESSION["user_no"]) && $_SESSION["user_no"] != "") {
     //if($user_no_show = ""){$user_no_show =$user_no;}
 }
 
-$follow_rel="";
+$follow_rel = "";
 
 try {
     require_once("./system/DBInfo.php");
@@ -42,17 +42,17 @@ try {
         $stmt->execute();
         $row = $stmt->fetch();
         $free_name = $row[0];
-        $row="";
+        $row = "";
 
         $sql = "select follow_no from follow where following=? and followed=?";
         $stmt = $pdo->prepare($sql);
         $stmt->bindValue(1, $user_no);
         $stmt->bindValue(2, $user_no_show);
         $stmt->execute();
-        if($row = $stmt->fetch()){
-            $follow_rel=true;
-        }else{
-            $follow_rel=false;
+        if ($row = $stmt->fetch()) {
+            $follow_rel = true;
+        } else {
+            $follow_rel = false;
         }
 
     }
@@ -65,7 +65,7 @@ try {
     $id_name_show = $row[0];
     $free_name_show = $row[1];
     $profile_show = $row[2];
-    $row="";
+    $row = "";
 
 
     $sql = "select count(tweet_no) from tweet where user_no=?";
@@ -74,7 +74,7 @@ try {
     $stmt->execute();
     $row = $stmt->fetch();
     $totalpage = ceil((int) $row[0] / 10);
-    $row="";
+    $row = "";
 
 
     $sql = "select count(follow_no) from follow where following=?";
@@ -83,7 +83,7 @@ try {
     $stmt->execute();
     $row = $stmt->fetch();
     $following_count = $row[0];
-    $row="";
+    $row = "";
 
 
 
@@ -134,9 +134,9 @@ try {
         <a href='main.php'>発言する</a>
         <a href='system/system_logout.php'>ログアウト</a>
         ";
-        }else{
+        } else {
             print "
-                <a href='login.html'>ログイン</a>
+                <p class='to_login'><a href='login.html'>ログイン</a></p>
             ";
         }
         ?>
@@ -148,7 +148,7 @@ try {
             </h2>
             <div>
                 <h3>アイコン</h3>
-                <img src="image/<?= $user_no_show?>.png" alt="">
+                <img src="image/<?= $user_no_show ?>.png" alt="">
                 <h3>ユーザ名</h3>
                 <p>
                     <?= $id_name_show ?>
@@ -157,38 +157,41 @@ try {
                 <p>
                     <?= $free_name_show ?>
                 </p>
-                <h3>自己紹介</h3>
-                <p>
-                    <?= $profile_show ?>
-                </p>
-                <a href="following.php?user_no=<?=$user_no_show ?>">フォロー一覧(<?=$following_count ?>)</a>
+                <div class="self_intro">
+                    <h3>自己紹介</h3>
+                    <p>
+                        <?= $profile_show ?>
+                    </p>
+                </div>
+                <a href="following.php?user_no=<?= $user_no_show ?>">フォロー一覧(<?= $following_count ?>)
+                </a>
                 <?php
-                if ($user_no ==$user_no_show) {
+                if ($user_no == $user_no_show) {
                     print "
-                <a href='account_edit.php'>アカウント編集</a>
-                <a href='profile_edit.php'>プロフィール編集</a>
-                ";
-                } else if ($follow_rel==true) {
+                        &nbsp; <a href='account_edit.php'>アカウント編集</a>
+                        &nbsp; <a href='profile_edit.php'>プロフィール編集</a>
+                    ";
+                } else if ($follow_rel == true) {
                     print "<a class='follow' href='' data-ed='{$user_no_show}' data-onoff='on'>フォロー解除</a>";
-                } else if ($follow_rel==false && $user_no !=""){
+                } else if ($follow_rel == false && $user_no != "") {
                     print "<a class='follow' href='' data-ed='{$user_no_show}' data-onoff='off'>フォローする</a>";
                 }
                 ?>
             </div>
         </section>
-        <section>
+        <section class="section2">
             <h2>発言</h2>
             <ul>
                 <?php
                 while ($row = $stmt->fetch()) {
                     print("<li class='tweet'>");
-                    print("<img class='min_img' src='image/{$user_no_show}.png'>");
+                    print("<img src='image/{$user_no_show}.png'>");
                     print("<div>");
-                   
-                    print("{$row[4]} {$row[5]}");
+
+                    print("<p>{$row[5]} <a href='my_timeline.php?user_no={$user_no_show}'>{$row[4]}</a></p>");
                     print("<p>{$row[3]}</p>");
-                    print("<p>{$row[1]} {$row[2]}</p>");
-                    
+                    print("<p class='time'>{$row[1]} {$row[2]}</p>");
+
 
                     print("</div>");
                     print("</li>");

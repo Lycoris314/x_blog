@@ -5,15 +5,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>X blog</title>
-    <link rel="stylesheet" href="./login.css">
+    <link rel="stylesheet" href="common.css">
     <script src="jquery.js"></script>
     <script src="login.js"></script>
 </head>
 
 <body>
-    <header>
-        <h1>X blog</h1>
-        <a href="timeline_no_login.php">ログインせずに見る</a>
+    <header class="login">
+        <div>
+            <h1>X blog</h1>
+            <img src="image/0.png" alt="X blog">
+        </div>
+        <p><a href="timeline_no_login.php">ログインせずに見る</a></p>
     </header>
     <div class="container">
         <h2>ログイン</h2>
@@ -22,7 +25,7 @@
                 <tbody>
                     <tr>
                         <td>ユーザ名</td>
-                        <td><input type="text" name="id_name" maxlength="16" required></td>
+                        <td><input type="text" name="id_name" maxlength="16"  required></td>
                     </tr>
                     <tr>
                         <td>パスワード</td>
@@ -34,7 +37,7 @@
             </table>
             <button>ログイン</button>
         </form>
-        <p></p>
+        <p class="msg"></p>
     </div>
 </body>
 

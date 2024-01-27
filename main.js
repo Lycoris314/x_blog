@@ -14,7 +14,6 @@ $(()=>{
                 $("textarea").val("");
                 $("#tweeted").text("送信されました");
             }else{
-                console.log(data);
                 $("#tweeted").text(data);
             }
         })

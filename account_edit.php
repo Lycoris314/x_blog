@@ -4,7 +4,7 @@ session_regenerate_id(true);
 if (isset($_SESSION["user_no"]) && $_SESSION["user_no"] != "") {
     $user_no = $_SESSION["user_no"];
 } else {
-    header("location:error.html");
+    header("location:error.php");
     exit();
 }
 
@@ -23,7 +23,7 @@ try {
 
 } catch (PDOException $e) {
     $pdo = null;
-    header("location:error.html");
+    header("location:error.php");
     exit();
 }
 
@@ -55,7 +55,7 @@ try {
         <a href="system/system_logout.php">ログアウト</a>
     </header>
 
-    <main>
+    <main class="account_edit">
         <h2>アカウント編集</h2>
         <form id="form">
             <table>
@@ -68,20 +68,27 @@ try {
                     </tr>
                     <tr>
                         <td>新しいユーザ名</td>
-                        <td><input id="new_id_name" type="text" name="new_id_name" value="<?= $id_name ?>" required>
+                        <td><input id="new_id_name" type="text" name="new_id_name" value="<?= $id_name ?>" required
+                                maxlength="16" pattern="[a-zA-Z0-9]{1,16}">
+                            <p class=small_font>ユーザ名は1字以上16字以内の英数字です。</p>
                         </td>
                     </tr>
                     <tr>
                         <td>現在のパスワード</td>
-                        <td><input id="password" type="text" name="password" required></td>
+                        <td><input id="password" type="text" name="password" required minlength="4" maxlength="12"
+                                pattern="[a-zA-Z0-9]{4,12}"></td>
                     </tr>
                     <tr>
                         <td>新しいパスワード</td>
-                        <td><input id="new_password" type="text" name="new_password" required></td>
+                        <td><input id="new_password" type="text" name="new_password" required minlength="4"
+                                maxlength="12" pattern="[a-zA-Z0-9]{4,12}">
+                                <p class=small_font>パスワードは4字以上16字以内の英数字です。</p>
+                            </td>
                     </tr>
                     <tr>
                         <td>新しいパスワード確認</td>
-                        <td><input type="text" required></td>
+                        <td><input id="cfm_password" type="text" required minlength="4" maxlength="12"
+                                pattern="[a-zA-Z0-9]{4,12}"></td>
                     </tr>
                 </tbody>
             </table>
@@ -114,11 +121,14 @@ try {
             </tbody>
         </table>
         <button type="button" class="back">戻る</button>
+
         <form id="form2" action="system/system_account_edit_exe.php" method="get">
+
             <input type="hidden" name=new_id_name id="new_id_name2">
             <input type="hidden" name=password id="password2">
             <input type="hidden" name=new_password id="new_password2">
-        <button>送信</button>
+
+            <button>送信</button>
         </form>
     </div>
 </body>
