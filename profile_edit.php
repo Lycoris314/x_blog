@@ -5,7 +5,7 @@ session_regenerate_id(true);
 if (isset($_SESSION["user_no"]) && $_SESSION["user_no"] != "") {
     $user_no = $_SESSION["user_no"];
 } else {
-    header("location:error.html");
+    header("location:error.php");
     exit();
 }
 

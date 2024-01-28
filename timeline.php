@@ -1,10 +1,12 @@
 <?php
 
+const NUM_OF_TWEET =20; //１ページに表示するツイートの数
+
 $page = 1;
 if (isset($_GET["page"]) && is_numeric($_GET["page"])) {
     $page = (int) $_GET["page"];
 }
-$from = ($page - 1) * 20;
+$from = ($page - 1) * NUM_OF_TWEET;
 
 
 session_start();
@@ -44,10 +46,10 @@ try {
     $stmt->execute();
     $row = $stmt->fetch();
 
-    $totalpage = ceil((int) $row[0] / 20);
+    $totalpage = ceil((int) $row[0] / NUM_OF_TWEET);
 
 
-    $sql = "select distinct content ,date,time,id_name,free_name,user_no from tweet left join follow on user_no=followed where user_no=? or following=? order by date desc,time desc  limit {$from},20";
+    $sql = "select distinct content ,date,time,id_name,free_name,user_no from tweet inner join follow on user_no=followed where user_no=? or following=? order by date desc,time desc  limit {$from},". NUM_OF_TWEET;
     $stmt = $pdo->prepare($sql);
     $stmt->bindValue(1, $user_no);
     $stmt->bindValue(2, $user_no);

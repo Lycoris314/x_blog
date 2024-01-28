@@ -1,10 +1,12 @@
 <?php
 
+const NUM_OF_TWEET =10; //１ページに表示するツイートの数
+
 $page = 1;
 if (isset($_GET["page"]) && is_numeric($_GET["page"])) {
     $page = (int) $_GET["page"];
 }
-$from = ($page - 1) * 10;
+$from = ($page - 1) * NUM_OF_TWEET;
 
 
 //タイムラインなどを表示する番号(必須)
@@ -72,7 +74,7 @@ try {
     $stmt->bindValue(1, $user_no_show);
     $stmt->execute();
     $row = $stmt->fetch();
-    $totalpage = ceil((int) $row[0] / 10);
+    $totalpage = ceil((int) $row[0] / NUM_OF_TWEET);
     $row = "";
 
 
@@ -85,7 +87,7 @@ try {
     $row = "";
 
 
-    $sql = "select * from tweet  where user_no=? order by date desc, time desc  limit {$from},10";
+    $sql = "select * from tweet  where user_no=? order by date desc, time desc  limit {$from},". NUM_OF_TWEET;
     $stmt = $pdo->prepare($sql);
     $stmt->bindValue(1, $user_no_show);
     $stmt->execute();

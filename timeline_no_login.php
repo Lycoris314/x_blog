@@ -1,12 +1,14 @@
 <?php
 //ログインしていないときのタイムラインのページ
 
-//ページネーション
+
+const NUM_OF_TWEET=20; //一ページに表示するツイートの数
+
 $page = 1;
 if (isset($_GET["page"]) && is_numeric($_GET["page"])) {
     $page = (int) $_GET["page"];
 }
-$from = ($page - 1) * 20;
+$from = ($page - 1) * NUM_OF_TWEET;
 
 
 try {
@@ -19,10 +21,10 @@ try {
     $stmt = $pdo->query($sql);
     $stmt->execute();
     $row = $stmt->fetch();
-    $totalpage = ceil((int) $row[0] / 20);
+    $totalpage = ceil((int) $row[0] / NUM_OF_TWEET);
 
 
-    $sql = "select * from tweet where not user_no=0 order by date desc, time desc  limit {$from},20";
+    $sql = "select * from tweet where not user_no=0 order by date desc, time desc  limit {$from},". NUM_OF_TWEET;
     $stmt = $pdo->query($sql);
     
     $pdo= null;

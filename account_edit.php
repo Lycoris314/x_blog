@@ -23,7 +23,7 @@ try {
     $id_name = $row[0];
     $free_name = $row[1];
 
-    $pdo=null;
+    $pdo = null;
 
 } catch (PDOException $e) {
     $pdo = null;
