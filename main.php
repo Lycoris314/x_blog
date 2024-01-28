@@ -71,9 +71,7 @@ try {
         </p>
         <ul>
             <li><a href="timeline.php">タイムライン</a></li>
-            <li><a href="notice.php">通知
-                    <?= $text_uncfm ?>
-                </a></li>
+            <li><a href="notice.php">通知<?= $text_uncfm ?></a></li>
             <li><a href="main.php">発言する</a></li>
             <li><a href="system/system_logout.php">ログアウト</a></li>
         </ul>

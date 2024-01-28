@@ -119,7 +119,10 @@ try {
 
 <body>
     <header>
-        <h1>X blog</h1>
+        <div>
+            <h1>X blog</h1>
+            <img src="image/0.png" alt="X blog">
+        </div>
 
         <?php
         if ($user_no != "") {
@@ -129,10 +132,12 @@ try {
                 {$free_name}
             </a>さん
         </p>
-        <a href='timeline.php'>タイムライン</a>
-        <a href='notice.php'>通知{$text_uncfm}</a>
-        <a href='main.php'>発言する</a>
-        <a href='system/system_logout.php'>ログアウト</a>
+        <ul>
+        <li><a href='timeline.php'>タイムライン</a></li>
+        <li><a href='notice.php'>通知{$text_uncfm}</a></li>
+        <li><a href='main.php'>発言する</a></li>
+        <li><a href='system/system_logout.php'>ログアウト</a></li>
+        </ul>
         ";
         } else {
             print "
@@ -188,7 +193,7 @@ try {
                     print("<img src='image/{$user_no_show}.png'>");
                     print("<div>");
 
-                    print("<p>{$row[5]} <a href='my_timeline.php?user_no={$user_no_show}'>{$row[4]}</a></p>");
+                    print("<p>{$row[5]} <a href='my_timeline.php?user_no={$user_no_show}'>@{$row[4]}</a></p>");
                     print("<p>{$row[3]}</p>");
                     print("<p class='time'>{$row[1]} {$row[2]}</p>");
 

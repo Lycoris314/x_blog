@@ -45,7 +45,6 @@ try {
     $totalpage = ceil((int) $row[0] / 20);
 
     $sql = "select distinct content ,date,time,id_name,free_name,user_no from tweet left join follow on user_no=followed where user_no=? or following=? order by date desc,time desc  limit {$from},20";
-    //$sql = "select distinct content ,date,time,id_name,free_name,user_no from tweet inner join follow on user_no=followed where following=? order by date desc,time desc  limit {$from},20";
 
     $stmt = $pdo->prepare($sql);
     $stmt->bindValue(1, $user_no);
@@ -83,9 +82,7 @@ try {
 
         <ul>
             <li><a href="timeline.php">タイムライン</a></li>
-            <li><a href="notice.php">通知
-                    <?= $text_uncfm ?>
-                </a></li>
+            <li><a href="notice.php">通知<?= $text_uncfm ?></a></li>
             <li><a href="main.php">発言する</a></li>
             <li><a href="system/system_logout.php">ログアウト</a></li>
         </ul>
@@ -96,15 +93,15 @@ try {
         <ul>
             <?php
             while ($row = $stmt->fetch()) {
-                print "<li class='tweet'>";
-                print "<img class='min_img' src='image/{$row[5]}.png'>";
-                print "<div>";
-                print "<a href='my_timeline.php?user_no={$row[5]}'>$row[4]</a> &nbsp;";
-                print "<a href='my_timeline.php?user_no={$row[5]}'>@{$row[3]}</a>";
-                print "<p>{$row[0]}</p>";
-                print "<p class='time'>{$row[1]} {$row[2]}</p>";
-                print "</div>";
-                print "</li>";
+                print 
+                "<li class='tweet'>
+                    <img src='image/{$row[5]}.png'>
+                    <div>
+                        <p>$row[4] <a href='my_timeline.php?user_no={$row[5]}'>@{$row[3]}</a></p>
+                        <p>{$row[0]}</p>
+                        <p class='time'>{$row[1]} {$row[2]}</p>
+                    </div>
+                </li>";
             }
             ?>
         </ul>

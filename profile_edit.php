@@ -14,6 +14,8 @@ try {
     $pdo = new PDO(DBInfo::DNS, DBInfo::USER, DBInfo::PASSWORD);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
+    require_once("uncfm_no.php");
+
     $sql = "select free_name ,profile from user where user_no= ?";
     $stmt = $pdo->prepare($sql);
     $stmt->bindValue(1, $user_no);
@@ -46,16 +48,22 @@ try {
 
 <body>
     <header>
-        <h1>X blog</h1>
+        <div>
+            <h1>X blog</h1>
+            <img src="image/0.png" alt="X blog">
+        </div>
         <p>ようこそ、
             <a href="my_timeline.php?user_no=<?= $user_no ?>">
                 <?= $free_name ?>
             </a>さん
         </p>
-        <a href="timeline.php">タイムライン</a>
-        <a href="notice.php">通知</a>
-        <a href="main.php">発言する</a>
-        <a href="system/system_logout.php">ログアウト</a>
+
+        <ul>
+            <li><a href="timeline.php">タイムライン</a></li>
+            <li><a href="notice.php">通知<?= $text_uncfm ?></a></li>
+            <li><a href="main.php">発言する</a></li>
+            <li><a href="system/system_logout.php">ログアウト</a></li>
+        </ul>
     </header>
 
     <main class="profile_edit">
@@ -66,7 +74,7 @@ try {
             <input type="file" id="upfile" name="upfile">
             <p class="small_font">png形式のみ利用できます。</p>
 
-            <table>
+            <table class="profile_edit">
                 <tr>
                     <td>表示名</td>
                     <td><input name="free_name" type="text" value=<?= $free_name ?> maxlength="20">
@@ -78,7 +86,7 @@ try {
                     <td><textarea name="profile" id="" cols="30" rows="10"><?= $profile ?></textarea></td>
                 </tr>
             </table>
-            <div class="profile_edit">
+            <div class="buttons">
                 <button type="reset">キャンセル</button>
                 <button class="to_cfm" type="button">確認</button>
             </div>
@@ -89,7 +97,7 @@ try {
         <h2>プロフィール編集</h2>
         <p>アイコン</p>
         <img src="image/<?= $user_no ?>.png" alt="人物アイコン">
-        <table>
+        <table class="profile_edit">
             <tr>
                 <td>表示名</td>
                 <td>
@@ -103,9 +111,10 @@ try {
                 </td>
             </tr>
         </table>
-
+        <div class="buttons">
         <button class="back" type="button">戻る</button>
         <button form="form">送信</button>
+        </div>
 
     </div>
 </body>

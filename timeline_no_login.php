@@ -28,7 +28,7 @@ try {
 
 
 
-    
+
 
 } catch (PDOException $e) {
 
@@ -36,26 +36,31 @@ try {
 ?>
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>X blog</title>
     <link rel="stylesheet" href="common.css">
 </head>
+
 <body>
     <header>
-        <h1>X blog</h1>
+        <div>
+            <h1>X blog</h1>
+            <img src="image/0.png" alt="X blog">
+        </div>
         <p class="to_login"><a href="login.html">ログイン</a></p>
     </header>
     <main>
         <h2>タイムライン</h2>
         <ul>
             <?php
-            while( $row = $stmt->fetch()){
-                print"<li class='tweet'>
+            while ($row = $stmt->fetch()) {
+                print "<li class='tweet'>
                         <img src='image/{$row[6]}.png'>
                         <div>
-                        <p>{$row[5]} <a href='my_timeline.php?user_no={$row[6]}'>{$row[4]}</a></p>
+                        <p>{$row[5]} <a href='my_timeline.php?user_no={$row[6]}'>@{$row[4]}</a></p>
                         <p>{$row[3]}</p>
                         <p class='time'>{$row[1]} {$row[2]}</p>
                         </div>
@@ -69,7 +74,7 @@ try {
             for ($i = 1; $i <= $totalpage; $i++) {
                 if ($page == $i) {
                     print "<a>";
-                }else{
+                } else {
                     print "<a href='?page={$i}'>";
                 }
                 print "{$i} </a> &emsp;";
@@ -78,4 +83,5 @@ try {
         </section>
     </main>
 </body>
+
 </html>

@@ -13,6 +13,8 @@ try {
     $pdo = new PDO(DBInfo::DNS, DBInfo::USER, DBInfo::PASSWORD);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
+    require_once("uncfm_no.php");
+
     $sql = "select id_name, free_name from user where user_no=?";
     $stmt = $pdo->prepare($sql);
     $stmt->bindValue(1, $user_no);
@@ -43,16 +45,24 @@ try {
 
 <body>
     <header>
-        <h1>X blog</h1>
+        <div>
+            <h1>X blog</h1>
+            <img src="image/0.png" alt="X blog">
+        </div>
         <p>ようこそ、
             <a href="my_timeline.php?user_no=<?= $user_no ?>">
                 <?= $free_name ?>
             </a>さん
         </p>
-        <a href="timeline.php">タイムライン</a>
-        <a href="notice.php">通知</a>
-        <a href="main.php">発言する</a>
-        <a href="system/system_logout.php">ログアウト</a>
+
+        <ul>
+            <li><a href="timeline.php">タイムライン</a></li>
+            <li><a href="notice.php">通知
+                    <?= $text_uncfm ?>
+                </a></li>
+            <li><a href="main.php">発言する</a></li>
+            <li><a href="system/system_logout.php">ログアウト</a></li>
+        </ul>
     </header>
 
     <main class="account_edit">
@@ -82,8 +92,8 @@ try {
                         <td>新しいパスワード</td>
                         <td><input id="new_password" type="text" name="new_password" required minlength="4"
                                 maxlength="12" pattern="[a-zA-Z0-9]{4,12}">
-                                <p class=small_font>パスワードは4字以上16字以内の英数字です。</p>
-                            </td>
+                            <p class=small_font>パスワードは4字以上16字以内の英数字です。</p>
+                        </td>
                     </tr>
                     <tr>
                         <td>新しいパスワード確認</td>
@@ -92,8 +102,8 @@ try {
                     </tr>
                 </tbody>
             </table>
-            <button form="form">確認</button>
-            <p class="wrong"></p>
+            <button class="center" form="form">確認</button>
+            <p class="wrong center"></p>
         </form>
 
     </main>
@@ -120,16 +130,18 @@ try {
                 </tr>
             </tbody>
         </table>
-        <button type="button" class="back">戻る</button>
+        <div class="buttons">
+            <button type="button" class="back">戻る</button>
 
-        <form id="form2" action="system/system_account_edit_exe.php" method="get">
+            <form id="form2" action="system/system_account_edit_exe.php" method="get">
 
-            <input type="hidden" name=new_id_name id="new_id_name2">
-            <input type="hidden" name=password id="password2">
-            <input type="hidden" name=new_password id="new_password2">
+                <input type="hidden" name=new_id_name id="new_id_name2">
+                <input type="hidden" name=password id="password2">
+                <input type="hidden" name=new_password id="new_password2">
 
-            <button>送信</button>
-        </form>
+                <button>送信</button>
+            </form>
+        </div>
     </div>
 </body>
 

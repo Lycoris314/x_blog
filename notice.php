@@ -71,9 +71,7 @@ try {
         </p>
         <ul>
             <li><a href="timeline.php">タイムライン</a></li>
-            <li><a href="notice.php">通知
-                    <?= $text_uncfm ?>
-                </a></li>
+            <li><a href="notice.php">通知<?= $text_uncfm ?></a></li>
             <li><a href="main.php">発言する</a></li>
             <li><a href="system/system_logout.php">ログアウト</a></li>
         </ul>
@@ -87,10 +85,9 @@ try {
                 print("<img class='min_img' src='image/{$row[5]}.png'>");
                 print("<div>");
 
-                print("{$row[4]} <a href='my_timeline.php?user_no={$row[5]}'>{$row[3]}</a>");
+                print("<p>{$row[4]} <a href='my_timeline.php?user_no={$row[5]}'>@{$row[3]}</a></p>");
                 print("<p>{$row[0]}</p>");
                 print("<p class='time'>{$row[1]} {$row[2]}</p>");
-
 
                 print("</div>");
                 print("</li>");

@@ -20,6 +20,8 @@ try {
     $pdo = new PDO(DBInfo::DNS, DBInfo::USER, DBInfo::PASSWORD);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
+    require_once("uncfm_no.php");
+
     if ($user_no != "") {
         $sql = "select free_name from user where user_no=?";
         $stmt = $pdo->prepare($sql);
@@ -66,7 +68,10 @@ try {
 
 <body>
     <header>
-        <h1>X blog</h1>
+        <div>
+            <h1>X blog</h1>
+            <img src="image/0.png" alt="X blog">
+        </div>
 
         <?php
         if ($user_no != "") {
@@ -76,10 +81,12 @@ try {
                    {$free_name}
                 </a>さん
             </p>
-            <a href='timeline.php'>タイムライン</a>
-            <a href='notice.php'>通知</a>
-            <a href='main.php'>発言する</a>
-            <a href='system/system_logout.php'>ログアウト</a>
+            <ul>
+                <li><a href='timeline.php'>タイムライン</a></li>
+                <li><a href='notice.php'>通知{$text_uncfm}</a></li>
+                <li><a href='main.php'>発言する</a></li>
+                <li><a href='system/system_logout.php'>ログアウト</a></li>
+            </ul>
             ";
         }else{
             print "
@@ -101,9 +108,9 @@ try {
                 <li class='tweet'>
                     <img src='image/{$row[3]}.png'>
                     <div>
-                    {$row[1]}
-                    <a href='my_timeline.php?user_no={$row[3]}'>{$row[0]}</a>
-                    
+                    <p>
+                    {$row[1]} <a href='my_timeline.php?user_no={$row[3]}'>@{$row[0]}</a>
+                    </p>
                     <p>{$row[2]}</p>
                     </div>
                 </li>
