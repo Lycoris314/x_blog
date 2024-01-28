@@ -1,5 +1,5 @@
 <?php
-//リダイレクト対策のち、IDとパスワードの変更を完了する。
+
 session_start();
 session_regenerate_id(true);
 if (isset($_SESSION["user_no"]) && $_SESSION["user_no"]!="" &&
@@ -11,7 +11,8 @@ if (isset($_SESSION["user_no"]) && $_SESSION["user_no"]!="" &&
     $password = $_GET["password"];
     $user_no = $_SESSION["user_no"];
 }else{
-    
+    header("location:../error.php");
+    exit();
 }
 
 try {
