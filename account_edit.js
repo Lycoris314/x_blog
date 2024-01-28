@@ -1,9 +1,10 @@
 $(() => {
 
-    const new_pass = document.querySelector("#new_password");  //$("#new_password");
-    const cfm_pass = document.querySelector("#cfm_password");//const cfm_pass=$("#cfm_password");
-    new_pass.addEventListener("change", onChange); //new_pass.on("change",onChange);
-    cfm_pass.addEventListener("change", onChange); //cfm_pass.on("change",onChange);
+    const new_pass = document.querySelector("#new_password");  
+    const cfm_pass = document.querySelector("#cfm_password");
+    
+    new_pass.addEventListener("change", onChange); 
+    cfm_pass.addEventListener("change", onChange); 
 
     const reg = /[a-zA-Z0-9]{4,12}/;
 
@@ -16,17 +17,10 @@ $(() => {
         }
     }
 
-    /*入力中は消しておく
-    new_pass.addEventListener("input", onInput);
-    cfm_pass.addEventListener("input", onInput);
-    function onInput() {
-        cfm_pass.setCustomValidity("");
-    }*/
-
     $("#form").on("submit", (e) => {
         e.preventDefault();
         const parameter = $("#form").serialize();
-        console.log(parameter);
+
         $.ajax({
             url: "./system/system_account_edit.php",
             type: "get",
@@ -36,9 +30,7 @@ $(() => {
         }).done((data) => {
 
             if (data == "success") {
-                //let new_id_name=$("#new_id_name").val();
-                //let new_password=$("#new_password").val();
-                //location="account_edit_cfm.php";
+
                 $("main").css("display", "none");
                 $(".cfm").css("display", "block");
                 $(".id_name").text($("#new_id_name").val());
@@ -50,6 +42,7 @@ $(() => {
 
             } else if(data =="wrong password"){
                 $("p.wrong").text("パスワードが間違っています。");
+
             } else if(data=="duplicate"){
                 $("p.wrong").text("このユーザ名は既に使われいます");
             }

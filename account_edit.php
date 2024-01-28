@@ -23,6 +23,8 @@ try {
     $id_name = $row[0];
     $free_name = $row[1];
 
+    $pdo=null;
+
 } catch (PDOException $e) {
     $pdo = null;
     header("location:error.php");
@@ -85,19 +87,19 @@ try {
                     </tr>
                     <tr>
                         <td>現在のパスワード</td>
-                        <td><input id="password" type="text" name="password" required minlength="4" maxlength="12"
+                        <td><input id="password" type="password" name="password" required minlength="4" maxlength="12"
                                 pattern="[a-zA-Z0-9]{4,12}"></td>
                     </tr>
                     <tr>
                         <td>新しいパスワード</td>
-                        <td><input id="new_password" type="text" name="new_password" required minlength="4"
+                        <td><input id="new_password" type="password" name="new_password" required minlength="4"
                                 maxlength="12" pattern="[a-zA-Z0-9]{4,12}">
                             <p class=small_font>パスワードは4字以上16字以内の英数字です。</p>
                         </td>
                     </tr>
                     <tr>
                         <td>新しいパスワード確認</td>
-                        <td><input id="cfm_password" type="text" required minlength="4" maxlength="12"
+                        <td><input id="cfm_password" type="password" required minlength="4" maxlength="12"
                                 pattern="[a-zA-Z0-9]{4,12}"></td>
                     </tr>
                 </tbody>

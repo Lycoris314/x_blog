@@ -5,7 +5,7 @@ session_regenerate_id(true);
 if (isset($_SESSION["user_no"]) && $_SESSION["user_no"] != "") {
     $user_no = $_SESSION["user_no"];
 } else {
-    header("location:error.html");
+    header("location:error.php");
     exit();
 }
 
@@ -20,9 +20,9 @@ try {
     $stmt = $pdo->prepare($sql);
     $stmt->bindValue(1, $user_no);
     $stmt->execute();
-
     $row = $stmt->fetch();
     $free_name = $row[0];
+
 
     $sql = "update notice set confirm =1 where user_no=?";
     $stmt = $pdo->prepare($sql);
@@ -37,12 +37,11 @@ try {
     $stmt->bindValue(1, $user_no);
     $stmt->execute();
 
-
     $pdo = null;
 
 } catch (PDOException $e) {
     $pdo = null;
-    //header("location:error.html");
+    header("location:error.php");
     exit();
 }
 

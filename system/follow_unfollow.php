@@ -1,6 +1,7 @@
 <?php
 session_start();
 session_regenerate_id(true);
+
 $onoff="";
 if (isset($_SESSION["user_no"]) && $_SESSION["user_no"] != "" &&
     isset($_GET["ed"]) && $_GET["ed"] !="" &&
@@ -85,5 +86,4 @@ try {
     }
     $pdo = null;
     header("location:../error.php");
-    //print($e->getMessage());
 }

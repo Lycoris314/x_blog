@@ -1,8 +1,7 @@
 <?php
-/*function h($str){
-    return htmlspecialchars($str,null,"UTF-8");
-}*/
+//ログインしていないときのタイムラインのページ
 
+//ページネーション
 $page = 1;
 if (isset($_GET["page"]) && is_numeric($_GET["page"])) {
     $page = (int) $_GET["page"];
@@ -15,7 +14,7 @@ try {
     $pdo = new PDO(DBInfo::DNS, DBInfo::USER, DBInfo::PASSWORD);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-
+    //総ページ数の計算
     $sql = "select count(tweet_no) from tweet where not user_no=0";
     $stmt = $pdo->query($sql);
     $stmt->execute();
@@ -25,14 +24,15 @@ try {
 
     $sql = "select * from tweet where not user_no=0 order by date desc, time desc  limit {$from},20";
     $stmt = $pdo->query($sql);
-
-
-
-
+    
+    $pdo= null;
 
 } catch (PDOException $e) {
-
+    $pdo= null;
+    header("location:error.php");
+    exit();
 }
+
 ?>
 <!DOCTYPE html>
 <html lang="ja">

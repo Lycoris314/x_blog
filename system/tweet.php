@@ -23,21 +23,6 @@ if (
 
 
 
-
-
-//$matches[1],$matches[2]にリプライするユーザのid_nameが入る
-//preg_match_all("/@(\w{1,16})[\s]|@(\w{1,16})$/m", $content, $matches);
-/*preg_match_all("/@(\w{1,16})[\s]/m", $content, $matches);
-
-
-$content = preg_replace("/(@(\w{1,16}))[\s]|(@(\w{1,16}))$/m", "<a href='system/my_timeline_sub.php?id_name=$2$4'>$1$3</a> ", $content);
-
-$content = str_replace(PHP_EOL, "<br>", $content);*/
-
-
-
-
-
 try {
     require_once("./DBInfo.php");
     $pdo = new PDO(DBInfo::DNS, DBInfo::USER, DBInfo::PASSWORD);
@@ -81,40 +66,8 @@ try {
     $stmt->bindValue(1, $user_no);
     $stmt->execute();
     $row = $stmt->fetch();
-
     $id_name = $row[0];
     $free_name = $row[1];
-
-    //$list =new ArrayObject();
-
-    /*foreach ($matches[1] as $value) {
-        if ($value == "") {
-            continue;
-        }
-        $sql = "select user_no from user where id_name=?";
-        $stmt = $pdo->prepare($sql);
-        $stmt->bindValue(1, $value);
-        $stmt->execute();
-        if ($row = $stmt->fetch()) {
-            print $row[0];
-            $rep_user_no = $rep_user_no . $row[0] . "/";
-            $list->append($row[0]);
-        }
-    }
-    なぜか関数がうまく働かないので仕方なくコピペ
-    foreach ($matches[2] as $value) {
-        if ($value == "") {
-            continue;
-        }
-        $sql = "select user_no from user where id_name=?";
-        $stmt = $pdo->prepare($sql);
-        $stmt->bindValue(1, $value);
-        $stmt->execute();
-        if ($row = $stmt->fetch()) {
-            $rep_user_no = $rep_user_no . $row[0] . "/";
-            $list->append($row[0]);
-        }
-    }*/
 
 
 
@@ -142,9 +95,7 @@ try {
     $list = array_unique((array) $list);
 
     foreach ($list as $value) {
-        /*if ($value == "") {
-            continue;
-        }*/
+ 
         $sql = "insert into notice values(NULL,?,?,0)";
         $stmt = $pdo->prepare($sql);
         $stmt->bindValue(1, $tweet_no);
@@ -158,22 +109,10 @@ try {
     $pdo = null;
     print "success";
 
-    //リプライの通知機能を追加する。
-    /*$sql2 = "select id_name from user";
-    $stmt2 = $pdo->query($sql2);
-    while( $row2 = $stmt2->fetch() ){
-        if(str_contains("@".$content,$row2[0]." ")){
-            //通知する。
-
-        }
-    }*/
-
 } catch (PDOException $e) {
     if (isset($pdo) && $pdo->inTransaction()) {
         $pdo->rollBack();
     }
     $pdo = null;
-
-    print $e->getMessage();
-    //header("location:../error.php");
+    header("location:../error.php");
 }

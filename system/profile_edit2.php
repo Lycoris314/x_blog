@@ -18,8 +18,6 @@ if (
     $new_profile = $_POST["profile"];
     $new_profile = h($new_profile);
 
-    //header("location:../error.php?msg={$new_free_name}");exit();
-
 } else {
     header("location:../error.php");
     exit();
@@ -75,7 +73,7 @@ if ($upfileTemp == "") {
     $errorFlag = true;
 }
 
-$byte = 1000 * 1000 * 2; 
+$byte = 1000 * 1000 * 3; 
 if ($upfileSize > $byte) {
     $errorFlag = true;
 }

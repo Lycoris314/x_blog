@@ -1,7 +1,4 @@
 <?php
-/*function h($str){
-    return htmlspecialchars($str,null,"UTF-8");
-}*/
 
 $page = 1;
 if (isset($_GET["page"]) && is_numeric($_GET["page"])) {
@@ -14,7 +11,7 @@ $from = ($page - 1) * 10;
 if (isset($_GET["user_no"]) && $_GET["user_no"] != "") {
     $user_no_show = $_GET["user_no"];
 } else {
-    header("location:error.html");
+    header("location:error.php");
     exit();
 }
 
@@ -23,7 +20,6 @@ session_start();
 session_regenerate_id(true);
 if (isset($_SESSION["user_no"]) && $_SESSION["user_no"] != "") {
     $user_no = $_SESSION["user_no"];
-    //if($user_no_show = ""){$user_no_show =$user_no;}
 }
 
 $follow_rel = "";
@@ -35,8 +31,10 @@ try {
 
     require_once("uncfm_no.php");
 
+    //ログインしている場合
     if ($user_no != "") {
-        $sql = "select free_name, profile from user where user_no=?";
+
+        $sql = "select free_name from user where user_no=?";
         $stmt = $pdo->prepare($sql);
         $stmt->bindValue(1, $user_no);
         $stmt->execute();
@@ -49,6 +47,7 @@ try {
         $stmt->bindValue(1, $user_no);
         $stmt->bindValue(2, $user_no_show);
         $stmt->execute();
+
         if ($row = $stmt->fetch()) {
             $follow_rel = true;
         } else {
@@ -86,8 +85,6 @@ try {
     $row = "";
 
 
-
-
     $sql = "select * from tweet  where user_no=? order by date desc, time desc  limit {$from},10";
     $stmt = $pdo->prepare($sql);
     $stmt->bindValue(1, $user_no_show);
@@ -97,7 +94,8 @@ try {
 
 } catch (PDOException $e) {
     $pdo = null;
-    header("location:./error.html");
+    header("location:./error.php");
+    exit();
 }
 
 
@@ -112,7 +110,6 @@ try {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>X blog</title>
     <link rel="stylesheet" href="common.css">
-    <link rel="stylesheet" href="my_timeline.css">
     <script src="jquery.js"></script>
     <script src="my_timeline.js"></script>
 </head>
@@ -133,10 +130,10 @@ try {
             </a>さん
         </p>
         <ul>
-        <li><a href='timeline.php'>タイムライン</a></li>
-        <li><a href='notice.php'>通知{$text_uncfm}</a></li>
-        <li><a href='main.php'>発言する</a></li>
-        <li><a href='system/system_logout.php'>ログアウト</a></li>
+            <li><a href='timeline.php'>タイムライン</a></li>
+            <li><a href='notice.php'>通知{$text_uncfm}</a></li>
+            <li><a href='main.php'>発言する</a></li>
+            <li><a href='system/system_logout.php'>ログアウト</a></li>
         </ul>
         ";
         } else {
@@ -184,11 +181,13 @@ try {
                 ?>
             </div>
         </section>
+
         <section class="section2">
             <h2>発言</h2>
             <ul>
                 <?php
                 while ($row = $stmt->fetch()) {
+
                     print("<li class='tweet'>");
                     print("<img src='image/{$user_no_show}.png'>");
                     print("<div>");
@@ -204,6 +203,7 @@ try {
                 ?>
             </ul>
         </section>
+
         <section class="pagenation">
             <?php
             for ($i = 1; $i <= $totalpage; $i++) {

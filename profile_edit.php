@@ -72,7 +72,7 @@ try {
             <p>アイコン</p>
             <img src="image/<?= $user_no ?>.png" alt="人物アイコン">
             <input type="file" id="upfile" name="upfile">
-            <p class="small_font">png形式のみ利用できます。</p>
+            <p class="small_font">png形式(3MB以下)のみ利用できます。</p>
 
             <table class="profile_edit">
                 <tr>

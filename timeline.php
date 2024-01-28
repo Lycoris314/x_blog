@@ -24,6 +24,7 @@ try {
 
     require_once("uncfm_no.php");
     $msg = "";
+
     if (isset($_GET["login"]) && $_GET["login"] == 1 && $uncfm_no != 0) {
         $msg = "未読の通知が{$uncfm_no}件あります。";
     }
@@ -35,6 +36,7 @@ try {
     $row = $stmt->fetch();
     $free_name = $row[0];
 
+
     $sql = "select count(distinct tweet_no) from tweet inner join follow on user_no=followed where user_no=? or following=?";
     $stmt = $pdo->prepare($sql);
     $stmt->bindValue(1, $user_no);
@@ -44,16 +46,19 @@ try {
 
     $totalpage = ceil((int) $row[0] / 20);
 
-    $sql = "select distinct content ,date,time,id_name,free_name,user_no from tweet left join follow on user_no=followed where user_no=? or following=? order by date desc,time desc  limit {$from},20";
 
+    $sql = "select distinct content ,date,time,id_name,free_name,user_no from tweet left join follow on user_no=followed where user_no=? or following=? order by date desc,time desc  limit {$from},20";
     $stmt = $pdo->prepare($sql);
     $stmt->bindValue(1, $user_no);
     $stmt->bindValue(2, $user_no);
     $stmt->execute();
 
+    $pdo= null;
+
 } catch (PDOException $e) {
     $pdo = null;
-    print $e->getMessage();
+    header("location:error.php");
+    exit();
 }
 
 ?>
