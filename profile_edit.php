@@ -112,8 +112,8 @@ try {
             </tr>
         </table>
         <div class="buttons">
-        <button class="back" type="button">戻る</button>
-        <button form="form">送信</button>
+            <button class="back" type="button">戻る</button>
+            <button form="form">送信</button>
         </div>
 
     </div>
