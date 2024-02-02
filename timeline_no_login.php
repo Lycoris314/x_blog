@@ -1,6 +1,7 @@
 <?php
-//ログインしていないときのタイムラインのページ
+require_once("./helper_function.php");
 
+//ログインしていないときのタイムラインのページ
 
 const NUM_OF_TWEET=20; //一ページに表示するツイートの数
 

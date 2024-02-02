@@ -1,4 +1,5 @@
 <?php
+require_once("../helper_function.php");
 
 function h($str)
 {
@@ -11,8 +12,8 @@ $content = "";
 session_start();
 session_regenerate_id(true);
 if (
-    isset($_SESSION["user_no"]) && $_SESSION["user_no"] != "" &&
-    isset($_POST["content"]) && $_POST["content"] != ""
+    nonempty_session("user_no") &&
+    nonempty_post("content")
 ) {
     $content = $_POST["content"];
     $user_no = $_SESSION["user_no"];
@@ -29,9 +30,7 @@ try {
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
     $content = h($content);
-
     $content .= " ";
-
 
     $list = new ArrayObject();
 
@@ -60,16 +59,7 @@ try {
 
     $content = str_replace(PHP_EOL, "<br>", $content);
 
-
-    $sql = "select id_name, free_name from user where user_no=?";
-    $stmt = $pdo->prepare($sql);
-    $stmt->bindValue(1, $user_no);
-    $stmt->execute();
-    $row = $stmt->fetch();
-    $id_name = $row[0];
-    $free_name = $row[1];
-
-
+    [$id_name, $free_name] = select_from_user_no($user_no, "id_name, free_name");
 
     $sql = "select tweet_no from tweet order by tweet_no desc limit 1";
     $stmt = $pdo->query($sql);
@@ -95,7 +85,7 @@ try {
     $list = array_unique((array) $list);
 
     foreach ($list as $value) {
- 
+
         $sql = "insert into notice values(NULL,?,?,0)";
         $stmt = $pdo->prepare($sql);
         $stmt->bindValue(1, $tweet_no);

@@ -1,9 +1,10 @@
 <?php
+require_once("../helper_function.php");
 //ログイン時にユーザ名とパスワードの組のチェックをするページ
 
 if(
-    isset($_GET["id_name"]) && $_GET["id_name"] != "" &&
-    isset($_GET["password"]) && $_GET["password"] !=""
+    nonempty_get("id_name") &&
+    nonempty_get("password")
 ){
     $id_name = $_GET["id_name"];
     $password = $_GET["password"];

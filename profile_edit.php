@@ -1,13 +1,15 @@
 <?php
+require_once("./helper_function.php");
 
 session_start();
 session_regenerate_id(true);
-if (isset($_SESSION["user_no"]) && $_SESSION["user_no"] != "") {
+if (nonempty_session("user_no")) {
     $user_no = $_SESSION["user_no"];
 } else {
     header("location:error.php");
     exit();
 }
+
 
 try {
     require_once("./system/DBInfo.php");
@@ -16,18 +18,13 @@ try {
 
     require_once("uncfm_no.php");
 
-    $sql = "select free_name ,profile from user where user_no= ?";
-    $stmt = $pdo->prepare($sql);
-    $stmt->bindValue(1, $user_no);
-    $stmt->execute();
-    $row = $stmt->fetch();
-    $free_name = $row[0];
-    $profile = $row[1];
+    [$free_name, $profile] = select_from_user_no($user_no, "free_name, profile");
+
     $pdo = null;
 
 } catch (PDOException $e) {
     $pdo = null;
-    header("location:error.html");
+    header("location:error.php");
     exit();
 }
 
@@ -60,7 +57,9 @@ try {
 
         <ul>
             <li><a href="timeline.php">タイムライン</a></li>
-            <li><a href="notice.php">通知<?= $text_uncfm ?></a></li>
+            <li><a href="notice.php">通知
+                    <?= $text_uncfm ?>
+                </a></li>
             <li><a href="main.php">発言する</a></li>
             <li><a href="system/system_logout.php">ログアウト</a></li>
         </ul>
@@ -70,7 +69,7 @@ try {
         <h2>プロフィール編集</h2>
         <form id="form" action="system/profile_edit2.php" method="post" enctype="multipart/form-data">
             <p>アイコン</p>
-            <img src="image/<?= $user_no ?>.png" alt="人物アイコン">
+            <img src="image/<?= $user_no ?>.png" alt="アイコン">
             <input type="file" id="upfile" name="upfile">
             <p class="small_font">png形式(3MB以下)のみ利用できます。</p>
 

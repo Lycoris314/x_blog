@@ -41,24 +41,4 @@ $(() => {
         }
     });
 
-    /*
-    const ed2 = $(".unfollow").attr("data-ed");
-
-    $(".unfollow").on("click", (e) => {
-        e.preventDefault();
-        $.ajax({
-            type: "get",
-            data: { ed: ed2, follow: "unfollow" },
-            url: "system/follow_unfollow.php",
-            cache: false,
-        }).done((data) => {
-            if (data == "success") {
-                console.log(data);
-                $(".unfollow").text("フォローする");
-                $('.unfollow').prop("class", "follow");
-            }
-        });
-    });
-    */
-
 })

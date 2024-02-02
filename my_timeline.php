@@ -1,4 +1,5 @@
 <?php
+require_once("./helper_function.php");
 
 const NUM_OF_TWEET =10; //１ページに表示するツイートの数
 
@@ -10,7 +11,7 @@ $from = ($page - 1) * NUM_OF_TWEET;
 
 
 //タイムラインなどを表示する番号(必須)
-if (isset($_GET["user_no"]) && $_GET["user_no"] != "") {
+if (nonempty_get("user_no")) {
     $user_no_show = $_GET["user_no"];
 } else {
     header("location:error.php");
@@ -20,7 +21,7 @@ if (isset($_GET["user_no"]) && $_GET["user_no"] != "") {
 $user_no = ""; //ログインしている番号
 session_start();
 session_regenerate_id(true);
-if (isset($_SESSION["user_no"]) && $_SESSION["user_no"] != "") {
+if (nonempty_session("user_no")) {
     $user_no = $_SESSION["user_no"];
 }
 
@@ -36,13 +37,7 @@ try {
     //ログインしている場合
     if ($user_no != "") {
 
-        $sql = "select free_name from user where user_no=?";
-        $stmt = $pdo->prepare($sql);
-        $stmt->bindValue(1, $user_no);
-        $stmt->execute();
-        $row = $stmt->fetch();
-        $free_name = $row[0];
-        $row = "";
+        $free_name =select_from_user_no($user_no, "free_name")[0];
 
         $sql = "select follow_no from follow where following=? and followed=?";
         $stmt = $pdo->prepare($sql);
@@ -58,16 +53,7 @@ try {
 
     }
 
-    $sql = "select id_name, free_name, profile from user where user_no=?";
-    $stmt = $pdo->prepare($sql);
-    $stmt->bindValue(1, $user_no_show);
-    $stmt->execute();
-    $row = $stmt->fetch();
-    $id_name_show = $row[0];
-    $free_name_show = $row[1];
-    $profile_show = $row[2];
-    $row = "";
-
+    [$id_name_show, $free_name_show, $profile_show]=select_from_user_no($user_no_show, "id_name, free_name, profile");
 
     $sql = "select count(tweet_no) from tweet where user_no=?";
     $stmt = $pdo->prepare($sql);
@@ -77,7 +63,7 @@ try {
     $totalpage = ceil((int) $row[0] / NUM_OF_TWEET);
     $row = "";
 
-
+    //フォロー人数
     $sql = "select count(follow_no) from follow where following=?";
     $stmt = $pdo->prepare($sql);
     $stmt->bindValue(1, $user_no_show);
@@ -189,6 +175,10 @@ try {
             <ul>
                 <?php
                 while ($row = $stmt->fetch()) {
+                    $delete="";
+                    if($user_no_show==$user_no){
+                        $delete= "<a href='system/delete.php?tweet_no={$row[0]}&&from=my_timeline'>削除</a>";
+                    }
 
                     print("<li class='tweet'>");
                     print("<img src='image/{$user_no_show}.png'>");
@@ -196,7 +186,7 @@ try {
 
                     print("<p>{$row[5]} <a href='my_timeline.php?user_no={$user_no_show}'>@{$row[4]}</a></p>");
                     print("<p>{$row[3]}</p>");
-                    print("<p class='time'>{$row[1]} {$row[2]}</p>");
+                    print("<p class='time'>{$row[1]} {$row[2]} {$delete}</p>");
 
 
                     print("</div>");

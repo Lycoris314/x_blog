@@ -1,4 +1,5 @@
 <?php
+require_once("./helper_function.php");
 
 const NUM_OF_TWEET =20; //１ページに表示するツイートの数
 
@@ -11,7 +12,7 @@ $from = ($page - 1) * NUM_OF_TWEET;
 
 session_start();
 session_regenerate_id(true);
-if (isset($_SESSION["user_no"]) && $_SESSION["user_no"] != "") {
+if (nonempty_session("user_no")) {
     $user_no = $_SESSION["user_no"];
 } else {
     header("location:timeline_no_login.php");
@@ -31,15 +32,9 @@ try {
         $msg = "未読の通知が{$uncfm_no}件あります。";
     }
 
-    $sql = "select free_name from user where user_no=?";
-    $stmt = $pdo->prepare($sql);
-    $stmt->bindValue(1, $user_no);
-    $stmt->execute();
-    $row = $stmt->fetch();
-    $free_name = $row[0];
+    $free_name =select_from_user_no($user_no, "free_name")[0];
 
-
-    $sql = "select count(distinct tweet_no) from tweet inner join follow on user_no=followed where user_no=? or following=?";
+    $sql = "select count(distinct tweet_no) from tweet left join follow on user_no=followed where user_no=? or following=?";
     $stmt = $pdo->prepare($sql);
     $stmt->bindValue(1, $user_no);
     $stmt->bindValue(2, $user_no);
@@ -49,7 +44,7 @@ try {
     $totalpage = ceil((int) $row[0] / NUM_OF_TWEET);
 
 
-    $sql = "select distinct content ,date,time,id_name,free_name,user_no from tweet inner join follow on user_no=followed where user_no=? or following=? order by date desc,time desc  limit {$from},". NUM_OF_TWEET;
+    $sql = "select distinct content ,date,time,id_name,free_name,user_no,tweet_no from tweet left join follow on user_no=followed where user_no=? or following=? order by date desc,time desc  limit {$from},". NUM_OF_TWEET;
     $stmt = $pdo->prepare($sql);
     $stmt->bindValue(1, $user_no);
     $stmt->bindValue(2, $user_no);
@@ -100,13 +95,17 @@ try {
         <ul>
             <?php
             while ($row = $stmt->fetch()) {
+                $delete="";
+                if($row[5]==$user_no){
+                    $delete= "<a href='system/delete.php?tweet_no={$row[6]}&&from=timeline'>削除</a>";
+                }
                 print 
                 "<li class='tweet'>
                     <img src='image/{$row[5]}.png'>
                     <div>
                         <p>$row[4] <a href='my_timeline.php?user_no={$row[5]}'>@{$row[3]}</a></p>
                         <p>{$row[0]}</p>
-                        <p class='time'>{$row[1]} {$row[2]}</p>
+                        <p class='time'>{$row[1]} {$row[2]} {$delete}</p>
                     </div>
                 </li>";
             }

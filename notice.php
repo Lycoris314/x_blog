@@ -1,8 +1,10 @@
 <?php
 
+require_once("./helper_function.php");
+
 session_start();
 session_regenerate_id(true);
-if (isset($_SESSION["user_no"]) && $_SESSION["user_no"] != "") {
+if (nonempty_session("user_no")) {
     $user_no = $_SESSION["user_no"];
 } else {
     header("location:error.php");
@@ -16,13 +18,7 @@ try {
 
     require_once("uncfm_no.php");
 
-    $sql = "select free_name from user where user_no=?";
-    $stmt = $pdo->prepare($sql);
-    $stmt->bindValue(1, $user_no);
-    $stmt->execute();
-    $row = $stmt->fetch();
-    $free_name = $row[0];
-
+    $free_name=select_from_user_no($user_no, "free_name")[0];
 
     $sql = "update notice set confirm =1 where user_no=?";
     $stmt = $pdo->prepare($sql);

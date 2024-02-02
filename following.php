@@ -1,6 +1,7 @@
 <?php
+require_once("./helper_function.php");
 
-if (isset($_GET["user_no"]) && $_GET["user_no"] != "") {
+if (nonempty_get("user_no")) {
     $user_no_show = $_GET["user_no"];
 } else {
     header("location:error.php");
@@ -10,7 +11,7 @@ if (isset($_GET["user_no"]) && $_GET["user_no"] != "") {
 $user_no = "";
 session_start();
 session_regenerate_id(true);
-if (isset($_SESSION["user_no"]) && $_SESSION["user_no"] != "") {
+if (nonempty_session("user_no")) {
     $user_no = $_SESSION["user_no"];
 }
 
@@ -23,24 +24,11 @@ try {
     require_once("uncfm_no.php");
 
     if ($user_no != "") {
-        $sql = "select free_name from user where user_no=?";
-        $stmt = $pdo->prepare($sql);
-        $stmt->bindValue(1, $user_no);
-        $stmt->execute();
-        $row = $stmt->fetch();
-        $free_name = $row[0];
-        $row = "";
+        $free_name= select_from_user_no($user_no, "free_name")[0];
     }
 
-    $sql = "select free_name from user where user_no=?";
-    $stmt = $pdo->prepare($sql);
-    $stmt->bindValue(1, $user_no_show);
-    $stmt->execute();
-    $row = $stmt->fetch();
-    $free_name_show = $row[0];
-    $row = "";
+    $free_name_show= select_from_user_no($user_no_show, "free_name")[0];
 
-    //$sql = "select followed from follow where following=?";
     $sql = "select id_name,free_name,profile, user_no from follow inner join user on followed=user_no where following=?";
     $stmt = $pdo->prepare($sql);
     $stmt->bindValue(1, $user_no_show);
@@ -108,10 +96,10 @@ try {
                 <li class='tweet'>
                     <img src='image/{$row[3]}.png'>
                     <div>
-                    <p>
-                    {$row[1]} <a href='my_timeline.php?user_no={$row[3]}'>@{$row[0]}</a>
-                    </p>
-                    <p>{$row[2]}</p>
+                        <p>
+                            {$row[1]} <a href='my_timeline.php?user_no={$row[3]}'>@{$row[0]}</a>
+                        </p>
+                        <p>{$row[2]}</p>
                     </div>
                 </li>
                 ");

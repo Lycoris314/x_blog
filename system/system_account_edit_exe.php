@@ -1,11 +1,13 @@
 <?php
+require_once("../helper_function.php");
 
 session_start();
 session_regenerate_id(true);
-if (isset($_SESSION["user_no"]) && $_SESSION["user_no"]!="" &&
-    isset($_GET["new_id_name"]) && $_GET["new_id_name"]!="" && 
-    isset($_GET["new_password"]) && $_GET["new_password"]!="" && 
-    isset($_GET["password"]) && $_GET["password"]!="" ){
+if (nonempty_session("user_no") &&
+    nonempty_get("new_id_name") && 
+    nonempty_get("new_password") && 
+    nonempty_get("password")
+    ){
     $new_id_name = $_GET["new_id_name"];
     $new_password = $_GET["new_password"];
     $password = $_GET["password"];
@@ -50,6 +52,5 @@ try {
         $pdo->rollBack();
     }
     $pdo = null;
-    print "あ、". $e->getMessage() ."です。";
     header("location:../error.php?msg=更新に失敗しました。");
 }

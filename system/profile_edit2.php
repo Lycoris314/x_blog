@@ -1,5 +1,5 @@
 <?php
-
+require_once("../helper_function.php");
 function h($str)
 {
     return htmlspecialchars($str, null, "UTF-8");
@@ -8,8 +8,8 @@ function h($str)
 session_start();
 session_regenerate_id(true);
 if (
-    isset($_SESSION["user_no"]) && $_SESSION["user_no"] != "" &&
-    isset($_POST["free_name"]) && $_POST["free_name"] != "" && strlen($_POST["free_name"])<=20 && 
+    nonempty_session("user_no") &&
+    nonempty_post("free_name") && strlen($_POST["free_name"])<=20 && 
     isset($_POST["profile"])
 ) {
     $user_no = $_SESSION["user_no"];
