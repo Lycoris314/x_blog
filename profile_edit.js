@@ -7,7 +7,7 @@ onload = () => {
         reader.readAsDataURL(document.querySelector("#upfile").files[0]);
 
         reader.onload = () => {
-            $("img").attr("src", reader.result);
+            $(".icon").attr("src", reader.result);
 
         };
     };

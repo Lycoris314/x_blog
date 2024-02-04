@@ -22,7 +22,7 @@ $(() => {
             url: "system/follow_unfollow.php",
             cache: false,
         }).done((data) => {
-            console.log("data");
+
             if (data == "success") {
                 
                 if (onoff == "off") {

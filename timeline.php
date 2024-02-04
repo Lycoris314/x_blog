@@ -68,6 +68,7 @@ try {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>X blog</title>
     <link rel="stylesheet" href="common.css">
+    <script src="timeline.js"></script>
 </head>
 
 <body>
@@ -97,7 +98,7 @@ try {
             while ($row = $stmt->fetch()) {
                 $delete="";
                 if($row[5]==$user_no){
-                    $delete= "<a href='system/delete.php?tweet_no={$row[6]}&&from=timeline'>削除</a>";
+                    $delete= "<a id='delete' href='system/delete.php?tweet_no={$row[6]}&&from=timeline'>削除</a>";
                 }
                 print 
                 "<li class='tweet'>

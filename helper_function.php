@@ -1,18 +1,6 @@
 <?php
 
-function logg($v)
-{
-    if ($v == "") {
-        file_put_contents("../log.txt", "通過" . "\n\r", FILE_APPEND);
-    } else {
-        file_put_contents("../log.txt", var_export($v, true) . "\n\r", FILE_APPEND);
-    }
-    if ($v == "") {
-        file_put_contents("log.txt", __LINE__ . "通過" . "\n\r", FILE_APPEND);
-    } else {
-        file_put_contents("log.txt", var_export($v, true) . "\n\r", FILE_APPEND);
-    }
-}
+
 
 function select_from_user_no(int $user_no, string $get)
 {
@@ -35,6 +23,7 @@ function select_from_user_no(int $user_no, string $get)
     return $row;
 }
 
+//スーパーグローバル変数に値がセットされているか確認する関数
 function nonempty_get(string $param)
 {
     return isset($_GET[$param]) && $_GET[$param]!="" ;
@@ -46,4 +35,22 @@ function nonempty_post(string $param)
 function nonempty_session(string $param)
 {
     return isset($_SESSION[$param]) && $_SESSION[$param]!="" ;
+}
+
+
+
+
+
+function logg($v)
+{
+    if ($v == "") {
+        file_put_contents("../log.txt", "通過" . "\n\r", FILE_APPEND);
+    } else {
+        file_put_contents("../log.txt", var_export($v, true) . "\n\r", FILE_APPEND);
+    }
+    if ($v == "") {
+        file_put_contents("log.txt", __LINE__ . "通過" . "\n\r", FILE_APPEND);
+    } else {
+        file_put_contents("log.txt", var_export($v, true) . "\n\r", FILE_APPEND);
+    }
 }

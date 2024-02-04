@@ -41,9 +41,9 @@ try {
 
                 global $pdo, $list;
 
-                $sql = "select user_no from user where id_name='{$m[2]}'";
-
-                $stmt = $pdo->query($sql);
+                $sql = "select user_no from user where id_name=?";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(1, $m[2]);
                 $stmt->execute();
 
                 if ($row = $stmt->fetch()) {

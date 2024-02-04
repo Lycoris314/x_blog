@@ -69,7 +69,7 @@ try {
         <h2>プロフィール編集</h2>
         <form id="form" action="system/profile_edit2.php" method="post" enctype="multipart/form-data">
             <p>アイコン</p>
-            <img src="image/<?= $user_no ?>.png" alt="アイコン">
+            <img class="icon" src="image/<?= $user_no ?>.png" alt="アイコン">
             <input type="file" id="upfile" name="upfile">
             <p class="small_font">png形式(3MB以下)のみ利用できます。</p>
 
@@ -95,7 +95,7 @@ try {
     <div class="cfm">
         <h2>プロフィール編集</h2>
         <p>アイコン</p>
-        <img src="image/<?= $user_no ?>.png" alt="人物アイコン">
+        <img class="icon" src="image/<?= $user_no ?>.png" alt="人物アイコン">
         <table class="profile_edit">
             <tr>
                 <td>表示名</td>
