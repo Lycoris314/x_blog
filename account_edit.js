@@ -6,7 +6,7 @@ $(() => {
     new_pass.addEventListener("change", onChange); 
     cfm_pass.addEventListener("change", onChange); 
 
-    const reg = /[a-zA-Z0-9]{4,12}/;
+    const reg = /^[a-zA-Z0-9]{4,12}$/;
 
     function onChange() {
 
