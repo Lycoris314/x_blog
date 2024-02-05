@@ -34,7 +34,7 @@
                         <td>パスワード</td>
                         <td><input id="new_password" type="password" name="new_password" required minlength="4"
                                 maxlength="12" pattern="[a-zA-Z0-9]{4,12}">
-                            <p class=small_font>パスワードは4字以上16字以内の英数字です。</p>
+                            <p class=small_font>パスワードは4字以上12字以内の英数字です。</p>
                         </td>
                     </tr>
                     <tr>

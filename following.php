@@ -32,8 +32,9 @@ try {
     $sql = "select id_name,free_name,profile, user_no from follow inner join user on followed=user_no where following=?";
     $stmt = $pdo->prepare($sql);
     $stmt->bindValue(1, $user_no_show);
+    
     $stmt->execute();
-    $pdo = null; //もしかしたらこのタイミングではダメかも
+    $pdo = null; 
 
 } catch (PDOException $e) {
     $pdo = null;
@@ -41,9 +42,7 @@ try {
     exit();
 }
 
-
 ?>
-
 <!DOCTYPE html>
 <html lang="ja">
 
@@ -71,7 +70,7 @@ try {
             </p>
             <ul>
                 <li><a href='timeline.php'>タイムライン</a></li>
-                <li><a href='notice.php'>通知{$text_uncfm}</a></li>
+                <li><a href='notice.php'>通知{$unconfirmed_no}</a></li>
                 <li><a href='main.php'>発言する</a></li>
                 <li><a href='system/system_logout.php'>ログアウト</a></li>
             </ul>
@@ -90,8 +89,7 @@ try {
         <ul>
             <?php
 
-            while ($row = $stmt->fetch()) {
-               
+            while ($row = $stmt->fetch()) {              
                 print("
                 <li class='tweet'>
                     <img src='image/{$row[3]}.png'>

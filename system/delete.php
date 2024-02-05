@@ -22,33 +22,25 @@ try {
     $pdo = new PDO(DBInfo::DNS, DBInfo::USER, DBInfo::PASSWORD);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    $sql="select date, time from tweet where tweet_no=?";
+    $sql = "select tweet_no from tweet where tweet_no=? and user_no=?";
     $stmt = $pdo->prepare($sql);
-    $stmt->bindValue(1,$tweet_no);
+    bindValues($stmt, $tweet_no, $user_no);
     $stmt->execute();
-    $row= $stmt->fetch();
-    $date=$row[0];
-    $time=$row[1];
+    if ($row = $stmt->fetch()) {
 
-    $sql="delete from tweet where tweet_no=?";
-    $stmt = $pdo->prepare($sql);
-    $stmt->bindValue(1,$tweet_no);
+        $sql = "update tweet set content='deleted', id_name='Xblog', free_name='Xblog', user_no=0 where tweet_no=?";
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindValue(1, $tweet_no);
 
-    $sql="insert into tweet values(?,?,?,'deleted','Xblog','Xblog',0)";
-    $stmt2 =$pdo->prepare($sql);
-    $stmt2->bindValue(1,$tweet_no);
-    $stmt2->bindValue(2,$date);
-    $stmt2->bindValue(3,$time);
-
-    $pdo->beginTransaction();
-    $stmt->execute();
-    $stmt2->execute();
-    $pdo->commit();
-    $pdo=null;
+        $pdo->beginTransaction();
+        $stmt->execute();
+        $pdo->commit();
+    }
+    $pdo = null;
     header("location:../{$from}.php?user_no={$user_no}");
 
 } catch (PDOException $e) {
-    $pdo=null;
+    $pdo = null;
     header("location:../error.php");
     exit();
 }

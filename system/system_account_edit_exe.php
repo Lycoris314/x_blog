@@ -3,9 +3,10 @@ require_once("../helper_function.php");
 
 session_start();
 session_regenerate_id(true);
+
 if (nonempty_session("user_no") &&
-    nonempty_get("new_id_name") && 
-    nonempty_get("new_password") && 
+    regular_get_id_name("new_id_name") &&
+    regular_get_password("new_password") &&
     nonempty_get("password")
     ){
     $new_id_name = $_GET["new_id_name"];
@@ -24,17 +25,14 @@ try {
 
     $sql = "select user_no from user where user_no=? and password=?";
     $stmt = $pdo->prepare($sql);
-    $stmt->bindValue(1, $user_no);
-    $stmt->bindValue(2, hash("sha256", $password));
+    bindValues($stmt, $user_no, hash("sha256", $password));
 
     $stmt->execute();
     if ($row = $stmt->fetch()) {
 
         $sql = "update user set id_name=? ,password=? where user_no=? ";
         $stmt = $pdo->prepare($sql);
-        $stmt->bindValue(3, $user_no);
-        $stmt->bindValue(2, hash("sha256", $new_password));
-        $stmt->bindValue(1, $new_id_name);
+        bindValues($stmt, $new_id_name, hash("sha256", $new_password), $user_no);
 
         $pdo->beginTransaction();
         $stmt->execute();

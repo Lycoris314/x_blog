@@ -31,8 +31,7 @@ try {
         $sql = "insert into follow values(NULL,?,?)";
     }
     $stmt = $pdo->prepare($sql);
-    $stmt->bindValue(1, $user_no);
-    $stmt->bindValue(2, $ed);
+    bindValues($stmt, $user_no, $ed);
 
     $pdo->beginTransaction();
     $stmt->execute();
@@ -41,33 +40,20 @@ try {
 
     if ($onoff == "off") {
 
-        //ツイート番号の事前取得
-        $sql = "select tweet_no from tweet order by tweet_no desc limit 1";
-        $stmt = $pdo->query($sql);
-        $stmt->execute();
-        $row = $stmt->fetch();
-        $tweet_no = $row[0] + 1;
-
         $id_name = select_from_user_no($user_no, "id_name")[0];
 
         $content = "お知らせ：<a href='my_timeline.php?user_no={$user_no}'>@{$id_name}</a> さんにフォローされました。";
-        $sql2 = "insert into tweet values(?,?,?,?,?,?,?)";
+        $sql2 = "insert into tweet values(NULL,?,?,?,?,?,0)";
         $stmt2 = $pdo->prepare($sql2);
-        $stmt2->bindValue(1, $tweet_no);
-        $stmt2->bindValue(2, date("Y-m-d"));
-        $stmt2->bindValue(3, date("H:i:s"));
-        $stmt2->bindValue(4, $content);
-        $stmt2->bindValue(5, "Xblog");
-        $stmt2->bindValue(6, "Xblog");
-        $stmt2->bindValue(7, 0);
+        bindValues($stmt2, date("Y-m-d"), date("H:i:s"), $content, "Xblog", "Xblog");
 
         $sql3 = "insert into notice values(NULL,?,?,0)";
         $stmt3 = $pdo->prepare($sql3);
-        $stmt3->bindValue(1, $tweet_no);
-        $stmt3->bindValue(2, $ed);
+        bindValues($stmt3, $tweet_no, $ed);
 
         $pdo->beginTransaction();
         $stmt2->execute();
+        $tweet_no=(int)$pdo->lastInsertId();
         $stmt3->execute();
         $pdo->commit();
     }

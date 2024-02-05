@@ -4,7 +4,7 @@ require_once("./helper_function.php");
 const NUM_OF_TWEET =10; //１ページに表示するツイートの数
 
 $page = 1;
-if (isset($_GET["page"]) && is_numeric($_GET["page"])) {
+if (nonempty_get("page")) {
     $page = (int) $_GET["page"];
 }
 $from = ($page - 1) * NUM_OF_TWEET;
@@ -112,18 +112,18 @@ try {
         <?php
         if ($user_no != "") {
             print "
-        <p>ようこそ、
-            <a href='my_timeline.php?user_no={$user_no}'>
-                {$free_name}
-            </a>さん
-        </p>
-        <ul>
-            <li><a href='timeline.php'>タイムライン</a></li>
-            <li><a href='notice.php'>通知{$text_uncfm}</a></li>
-            <li><a href='main.php'>発言する</a></li>
-            <li><a href='system/system_logout.php'>ログアウト</a></li>
-        </ul>
-        ";
+                <p>ようこそ、
+                    <a href='my_timeline.php?user_no={$user_no}'>
+                        {$free_name}
+                    </a>さん
+                </p>
+                <ul>
+                    <li><a href='timeline.php'>タイムライン</a></li>
+                    <li><a href='notice.php'>通知{$unconfirmed_no}</a></li>
+                    <li><a href='main.php'>発言する</a></li>
+                    <li><a href='system/system_logout.php'>ログアウト</a></li>
+                </ul>
+            ";
         } else {
             print "
                 <p class='to_login'><a href='login.html'>ログイン</a></p>
@@ -177,20 +177,18 @@ try {
                 while ($row = $stmt->fetch()) {
                     $delete="";
                     if($user_no_show==$user_no){
-                        $delete= "<a href='system/delete.php?tweet_no={$row[0]}&&from=my_timeline'>削除</a>";
+                        $delete= "<a class='del' href='system/delete.php?tweet_no={$row[0]}&from=my_timeline'>削除</a>";
                     }
-
-                    print("<li class='tweet'>");
-                    print("<img src='image/{$user_no_show}.png'>");
-                    print("<div>");
-
-                    print("<p>{$row[5]} <a href='my_timeline.php?user_no={$user_no_show}'>@{$row[4]}</a></p>");
-                    print("<p>{$row[3]}</p>");
-                    print("<p class='time'>{$row[1]} {$row[2]} {$delete}</p>");
-
-
-                    print("</div>");
-                    print("</li>");
+                    print("
+                        <li class='tweet'>
+                            <img src='image/{$user_no_show}.png'>
+                            <div>
+                                <p>{$row[5]} <a href='my_timeline.php?user_no={$user_no_show}'>@{$row[4]}</a></p>
+                                <p>{$row[3]}</p>
+                                <p class='time'>{$row[1]} {$row[2]} {$delete}</p>
+                            </div>
+                        </li>"
+                    );
                 }
                 ?>
             </ul>

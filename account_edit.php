@@ -3,6 +3,7 @@ require_once("./helper_function.php");
 
 session_start();
 session_regenerate_id(true);
+
 if (nonempty_session("user_no")) {
     $user_no = $_SESSION["user_no"];
 } else {
@@ -54,7 +55,7 @@ try {
 
         <ul>
             <li><a href="timeline.php">タイムライン</a></li>
-            <li><a href="notice.php">通知<?= $text_uncfm ?></a></li>
+            <li><a href="notice.php">通知<?= $unconfirmed_no ?></a></li>
             <li><a href="main.php">発言する</a></li>
             <li><a href="system/system_logout.php">ログアウト</a></li>
         </ul>
@@ -87,7 +88,7 @@ try {
                         <td>新しいパスワード</td>
                         <td><input id="new_password" type="password" name="new_password" required minlength="4"
                                 maxlength="12" pattern="[a-zA-Z0-9]{4,12}">
-                            <p class=small_font>パスワードは4字以上16字以内の英数字です。</p>
+                            <p class=small_font>パスワードは4字以上12字以内の英数字です。</p>
                         </td>
                     </tr>
                     <tr>

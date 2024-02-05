@@ -2,7 +2,7 @@ onload = () => {
 
     document.querySelector("#upfile").onchange = () => {
 
-
+        //ファイルを選択したら画像を表示させる
         let reader = new FileReader();
         reader.readAsDataURL(document.querySelector("#upfile").files[0]);
 

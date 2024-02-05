@@ -4,9 +4,9 @@ require_once("../helper_function.php");
 session_start();
 session_regenerate_id(true);
 if (
-    nonempty_get("new_id_name") &&
+    regular_get_id_name("new_id_name") &&
     nonempty_get("password") &&
-    nonempty_get("new_password") &&
+    regular_get_password("new_password") &&
     nonempty_session("user_no")
 ) {
     $new_id_name = $_GET["new_id_name"];
@@ -25,17 +25,14 @@ try {
 
     $sql="select user_no from user where user_no=? and password=?";
     $stmt = $pdo->prepare($sql);
-    $stmt->bindValue(1,$user_no);
-    $stmt->bindValue(2,hash("sha256",$password));
+    bindValues($stmt, $user_no, hash("sha256", $password));
 
     $stmt->execute();
     if($row = $stmt->fetch()){
-        //新しいIDとパスワードの適正チェック
 
         $sql="select user_no from user where id_name=? and not user_no=?";
         $stmt = $pdo->prepare($sql);
-        $stmt->bindValue(1,$new_id_name);
-        $stmt->bindValue(2,$user_no);
+        bindValues($stmt, $new_id_name, $user_no);
 
         $stmt->execute();
         if($row = $stmt->fetch()){

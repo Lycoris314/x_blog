@@ -3,10 +3,10 @@ require_once("./helper_function.php");
 
 //ログインしていないときのタイムラインのページ
 
-const NUM_OF_TWEET=20; //一ページに表示するツイートの数
+const NUM_OF_TWEET = 20; //一ページに表示するツイートの数
 
 $page = 1;
-if (isset($_GET["page"]) && is_numeric($_GET["page"])) {
+if (nonempty_get("page")) {
     $page = (int) $_GET["page"];
 }
 $from = ($page - 1) * NUM_OF_TWEET;
@@ -25,13 +25,13 @@ try {
     $totalpage = ceil((int) $row[0] / NUM_OF_TWEET);
 
 
-    $sql = "select * from tweet where not user_no=0 order by date desc, time desc  limit {$from},". NUM_OF_TWEET;
+    $sql = "select * from tweet where not user_no=0 order by date desc, time desc  limit {$from}," . NUM_OF_TWEET;
     $stmt = $pdo->query($sql);
-    
-    $pdo= null;
+
+    $pdo = null;
 
 } catch (PDOException $e) {
-    $pdo= null;
+    $pdo = null;
     header("location:error.php");
     exit();
 }
@@ -60,14 +60,16 @@ try {
         <ul>
             <?php
             while ($row = $stmt->fetch()) {
-                print "<li class='tweet'>
-                        <img src='image/{$row[6]}.png'>
-                        <div>
+                print "
+                <li class='tweet'>
+                    <img src='image/{$row[6]}.png'>
+                    <div>
                         <p>{$row[5]} <a href='my_timeline.php?user_no={$row[6]}'>@{$row[4]}</a></p>
                         <p>{$row[3]}</p>
                         <p class='time'>{$row[1]} {$row[2]}</p>
-                        </div>
-                     </li>";
+                    </div>
+                </li>"
+                ;
             }
             ?>
         </ul>

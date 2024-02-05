@@ -114,8 +114,6 @@ button {
     margin: 20px auto;
     padding: 5px 20px;
     cursor: pointer;
-    /*display: grid;*/
-    /*place-content: center;*/
 }
 
 button:active {

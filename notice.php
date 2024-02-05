@@ -18,7 +18,7 @@ try {
 
     require_once("uncfm_no.php");
 
-    $free_name=select_from_user_no($user_no, "free_name")[0];
+    $free_name = select_from_user_no($user_no, "free_name")[0];
 
     $sql = "update notice set confirm =1 where user_no=?";
     $stmt = $pdo->prepare($sql);
@@ -66,7 +66,9 @@ try {
         </p>
         <ul>
             <li><a href="timeline.php">タイムライン</a></li>
-            <li><a href="notice.php">通知<?= $text_uncfm ?></a></li>
+            <li><a href="notice.php">通知
+                    <?= $unconfirmed_no ?>
+                </a></li>
             <li><a href="main.php">発言する</a></li>
             <li><a href="system/system_logout.php">ログアウト</a></li>
         </ul>
@@ -76,16 +78,15 @@ try {
         <ul>
             <?php
             while ($row = $stmt->fetch()) {
-                print("<li class='tweet'>");
-                print("<img class='min_img' src='image/{$row[5]}.png'>");
-                print("<div>");
-
-                print("<p>{$row[4]} <a href='my_timeline.php?user_no={$row[5]}'>@{$row[3]}</a></p>");
-                print("<p>{$row[0]}</p>");
-                print("<p class='time'>{$row[1]} {$row[2]}</p>");
-
-                print("</div>");
-                print("</li>");
+                print("
+                <li class='tweet'>
+                    <img class='min_img' src='image/{$row[5]}.png'>
+                    <div>
+                        <p>{$row[4]} <a href='my_timeline.php?user_no={$row[5]}'>@{$row[3]}</a></p>
+                        <p>{$row[0]}</p>
+                        <p class='time'>{$row[1]} {$row[2]}</p>
+                    </div>
+                </li>");
             }
             ?>
         </ul>

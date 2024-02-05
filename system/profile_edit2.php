@@ -1,16 +1,13 @@
 <?php
 require_once("../helper_function.php");
-function h($str)
-{
-    return htmlspecialchars($str, null, "UTF-8");
-}
 
 session_start();
 session_regenerate_id(true);
 if (
     nonempty_session("user_no") &&
-    nonempty_post("free_name") && strlen($_POST["free_name"])<=20 && 
-    isset($_POST["profile"])
+    nonempty_post("free_name") && 
+    mb_strlen($_POST["free_name"],"utf-8")<=20 && 
+    isset($_POST["profile"]) //プロフィールは空でもよい。
 ) {
     $user_no = $_SESSION["user_no"];
     $new_free_name = $_POST["free_name"];
@@ -30,9 +27,7 @@ try {
 
     $sql = "update user set free_name=?, profile=? where user_no=?";
     $stmt = $pdo->prepare($sql);
-    $stmt->bindValue(1, $new_free_name);
-    $stmt->bindValue(2, $new_profile);
-    $stmt->bindValue(3, $user_no);
+    bindValues($stmt, $new_free_name, $new_profile, $user_no);
 
     $pdo->beginTransaction();
     $stmt->execute();

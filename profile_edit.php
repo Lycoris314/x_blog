@@ -3,13 +3,13 @@ require_once("./helper_function.php");
 
 session_start();
 session_regenerate_id(true);
+
 if (nonempty_session("user_no")) {
     $user_no = $_SESSION["user_no"];
 } else {
     header("location:error.php");
     exit();
 }
-
 
 try {
     require_once("./system/DBInfo.php");
@@ -58,7 +58,7 @@ try {
         <ul>
             <li><a href="timeline.php">タイムライン</a></li>
             <li><a href="notice.php">通知
-                    <?= $text_uncfm ?>
+                    <?= $unconfirmed_no ?>
                 </a></li>
             <li><a href="main.php">発言する</a></li>
             <li><a href="system/system_logout.php">ログアウト</a></li>

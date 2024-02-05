@@ -4,7 +4,7 @@ require_once("./helper_function.php");
 const NUM_OF_TWEET =20; //１ページに表示するツイートの数
 
 $page = 1;
-if (isset($_GET["page"]) && is_numeric($_GET["page"])) {
+if (nonempty_get("page")) {
     $page = (int) $_GET["page"];
 }
 $from = ($page - 1) * NUM_OF_TWEET;
@@ -36,8 +36,7 @@ try {
 
     $sql = "select count(distinct tweet_no) from tweet left join follow on user_no=followed where user_no=? or following=?";
     $stmt = $pdo->prepare($sql);
-    $stmt->bindValue(1, $user_no);
-    $stmt->bindValue(2, $user_no);
+    bindValues($stmt, $user_no, $user_no);
     $stmt->execute();
     $row = $stmt->fetch();
 
@@ -46,8 +45,7 @@ try {
 
     $sql = "select distinct content ,date,time,id_name,free_name,user_no,tweet_no from tweet left join follow on user_no=followed where user_no=? or following=? order by date desc,time desc  limit {$from},". NUM_OF_TWEET;
     $stmt = $pdo->prepare($sql);
-    $stmt->bindValue(1, $user_no);
-    $stmt->bindValue(2, $user_no);
+    bindValues($stmt, $user_no, $user_no);
     $stmt->execute();
 
     $pdo= null;
@@ -68,6 +66,7 @@ try {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>X blog</title>
     <link rel="stylesheet" href="common.css">
+    <script src="jquery.js"></script>
     <script src="timeline.js"></script>
 </head>
 
@@ -85,7 +84,7 @@ try {
 
         <ul>
             <li><a href="timeline.php">タイムライン</a></li>
-            <li><a href="notice.php">通知<?= $text_uncfm ?></a></li>
+            <li><a href="notice.php">通知<?= $unconfirmed_no ?></a></li>
             <li><a href="main.php">発言する</a></li>
             <li><a href="system/system_logout.php">ログアウト</a></li>
         </ul>
@@ -98,7 +97,7 @@ try {
             while ($row = $stmt->fetch()) {
                 $delete="";
                 if($row[5]==$user_no){
-                    $delete= "<a id='delete' href='system/delete.php?tweet_no={$row[6]}&&from=timeline'>削除</a>";
+                    $delete= "<a class='del' href='system/delete.php?tweet_no={$row[6]}&from=timeline'>削除</a>";
                 }
                 print 
                 "<li class='tweet'>
@@ -106,7 +105,7 @@ try {
                     <div>
                         <p>$row[4] <a href='my_timeline.php?user_no={$row[5]}'>@{$row[3]}</a></p>
                         <p>{$row[0]}</p>
-                        <p class='time'>{$row[1]} {$row[2]} {$delete}</p>
+                        <p class='time'>{$row[1]} {$row[2]} ".$delete."</p>
                     </div>
                 </li>";
             }

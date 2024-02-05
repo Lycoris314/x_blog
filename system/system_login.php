@@ -21,8 +21,8 @@ try {
    
     $sql="select user_no from user where id_name=? and password=?";
     $stmt = $pdo->prepare($sql);
-    $stmt->bindValue(1,$id_name);
-    $stmt->bindValue(2,hash("sha256",$password));
+
+    bindValues($stmt, $id_name, hash("sha256" ,$password));
     $stmt->execute();
     if($row = $stmt->fetch()){
 

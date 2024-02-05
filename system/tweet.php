@@ -1,11 +1,6 @@
 <?php
 require_once("../helper_function.php");
 
-function h($str)
-{
-    return htmlspecialchars($str, null, "UTF-8");
-}
-
 $user_no = "";
 $content = "";
 
@@ -21,7 +16,6 @@ if (
     header("location:../error.php");
     exit();
 }
-
 
 
 try {
@@ -49,47 +43,36 @@ try {
                 if ($row = $stmt->fetch()) {
 
                     $list->append($row[0]);
-                    return "<a href='my_timeline.php?user_no={$row[0]}'>{$m[1]}</a>$m[3]";
+                    return "<a href='my_timeline.php?user_no={$row[0]}'>{$m[1]}</a>{$m[3]}";
                 } else {
-                    return $m[1];
+                    return $m[0];
                 }
             },
             $content
         );
-
+    
     $content = str_replace(PHP_EOL, "<br>", $content);
 
     [$id_name, $free_name] = select_from_user_no($user_no, "id_name, free_name");
 
-    $sql = "select tweet_no from tweet order by tweet_no desc limit 1";
-    $stmt = $pdo->query($sql);
-    $stmt->execute();
-    $row = $stmt->fetch();
-    $tweet_no = $row[0] + 1;
 
-
-    $sql = "insert into tweet values(?,?,?,?,?,?,?)";
+    $sql = "insert into tweet values(NULL,?,?,?,?,?,?)";
     $stmt = $pdo->prepare($sql);
-    $stmt->bindValue(1, $tweet_no);
-    $stmt->bindValue(2, date("Y-m-d"));
-    $stmt->bindValue(3, date("H:i:s"));
-    $stmt->bindValue(4, $content);
-    $stmt->bindValue(5, $id_name);
-    $stmt->bindValue(6, $free_name);
-    $stmt->bindValue(7, $user_no);
+    bindValues($stmt, date("Y-m-d"), date("H:i:s"), $content ,$id_name, $free_name, $user_no);
 
     $pdo->beginTransaction();
     $stmt->execute();
+    $tweet_no=(int)$pdo->lastInsertId(); 
     $pdo->commit();
 
     $list = array_unique((array) $list);
+
 
     foreach ($list as $value) {
 
         $sql = "insert into notice values(NULL,?,?,0)";
         $stmt = $pdo->prepare($sql);
-        $stmt->bindValue(1, $tweet_no);
-        $stmt->bindValue(2, $value);
+        bindValues($stmt, $tweet_no, $value);
 
         $pdo->beginTransaction();
         $stmt->execute();

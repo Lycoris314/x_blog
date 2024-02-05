@@ -2,8 +2,8 @@
 require_once("../helper_function.php");
 
 if (
-    nonempty_get("new_id_name") &&
-    nonempty_get("new_password")
+    regular_get_id_name("new_id_name") &&
+    regular_get_password("new_password")
 ) {
     $new_id_name = $_GET["new_id_name"];
     $new_password = $_GET["new_password"];
