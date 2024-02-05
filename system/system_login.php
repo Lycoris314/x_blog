@@ -3,8 +3,8 @@ require_once("../helper_function.php");
 //ログイン時にユーザ名とパスワードの組のチェックをするページ
 
 if(
-    nonempty_get("id_name") &&
-    nonempty_get("password")
+    regular_get_id_name("id_name") &&
+    regular_get_password("password")
 ){
     $id_name = $_GET["id_name"];
     $password = $_GET["password"];

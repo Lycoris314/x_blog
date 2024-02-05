@@ -7,12 +7,12 @@ session_regenerate_id(true);
 if (nonempty_session("user_no") &&
     regular_get_id_name("new_id_name") &&
     regular_get_password("new_password") &&
-    nonempty_get("password")
+    regular_get_password("password")
     ){
+    $user_no = $_SESSION["user_no"];
     $new_id_name = $_GET["new_id_name"];
     $new_password = $_GET["new_password"];
     $password = $_GET["password"];
-    $user_no = $_SESSION["user_no"];
 }else{
     header("location:../error.php");
     exit();

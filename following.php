@@ -15,7 +15,6 @@ if (nonempty_session("user_no")) {
     $user_no = $_SESSION["user_no"];
 }
 
-
 try {
     require_once("./system/DBInfo.php");
     $pdo = new PDO(DBInfo::DNS, DBInfo::USER, DBInfo::PASSWORD);
@@ -77,7 +76,7 @@ try {
             ";
         }else{
             print "
-                <a href='login.html'>ログイン</a>
+                <p class='to_login'><a href='login.html'>ログイン</a></p>
             ";
         }
         ?>

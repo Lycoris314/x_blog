@@ -5,7 +5,7 @@ session_start();
 session_regenerate_id(true);
 if (
     regular_get_id_name("new_id_name") &&
-    nonempty_get("password") &&
+    regular_get_password("password") &&
     regular_get_password("new_password") &&
     nonempty_session("user_no")
 ) {

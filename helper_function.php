@@ -5,6 +5,7 @@ function h($str)
     return htmlspecialchars($str, ENT_QUOTES | ENT_HTML5, "UTF-8");
 }
 
+//userテーブルのuser_noからユーザ情報を取得する関数。
 function select_from_user_no(int $user_no, string $get)
 {
     $sql = match ($get) {
