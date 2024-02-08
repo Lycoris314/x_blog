@@ -50,6 +50,15 @@ try {
             },
             $content
         );
+
+        $content =
+            preg_replace_callback(
+                "|https?://[\w!?/+\-~;.,*&@#$%()'[\]]+|",
+                function ($m) {
+                    return "<a href={$m[0]}>{$m[0]}</a>";
+                },
+                $content
+            );
     
     $content = str_replace(PHP_EOL, "<br>", $content);
 
