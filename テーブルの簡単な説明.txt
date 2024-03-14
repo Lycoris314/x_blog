@@ -1,0 +1,25 @@
+テーブルuser
+user_no :識別子
+id_name :ユーザ名
+free_name :表示名
+password :パスワードをSHA256で変換したもの
+profile:プロフィール
+
+テーブルfollow
+follow_no :識別子
+followingおよびfollowedの組でfollowingがfollowedをフォローしていることを表す。
+
+テーブルtweet
+tweet_no :識別子
+date :日付
+time :時間
+content :ツイートの内容
+id_name :投稿者のユーザ名
+free_name :投稿者の表示名
+user_no :投稿者のuser_no
+
+テーブルnotice
+notice_no :識別子
+tweet_no :通知ページに表示するツイートのtweet_no
+user_no :通知を受けるユーザのuser_no
+confirm :0で通知未確認、1で通知確認済みを表す
